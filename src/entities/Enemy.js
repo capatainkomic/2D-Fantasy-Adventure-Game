@@ -26,7 +26,7 @@ class Enemy extends Vehicle {
         // --- Poids des forces (réglables via DebugPanel) ---
         this.weightArrive = 1.0;
         this.weightPursue = 1.0;
-        this.weightAvoid  = 3.0;
+        this.weightAvoid  = 5.0;
 
         // --- Patrouille ---
         this.patrolPath         = [];
@@ -45,6 +45,15 @@ class Enemy extends Vehicle {
 
         // --- Machine à états ---
         this.state = "patrol";
+
+         // --- Combat ---
+        this.hp              = 20;
+        this.maxHp           = 20;
+        this.isHurt          = false;
+        this.hurtTimer       = 0;
+        this.hurtDuration    = 20;  // frames du flash rouge
+        this.invincibleTimer    = 0;
+        this.invincibleDuration = 30; // frames d'invincibilité
 
         // --- Animations (spritesheet une ligne par animation) ---
         this.animations = {
@@ -85,6 +94,12 @@ class Enemy extends Vehicle {
     // Couche 3 : Locomotion       → super.update()
     // =============================================
     update() {
+        if (this.isDead()) return; // ne plus updater si mort
+ 
+        if (this.hurtTimer > 0)       this.hurtTimer--;
+        if (this.invincibleTimer > 0) this.invincibleTimer--;
+        if (this.hurtTimer <= 0)      this.isHurt = false;
+
         this.updateState();
         this.executeState();
         super.update();
@@ -103,6 +118,12 @@ class Enemy extends Vehicle {
     // Gère UNIQUEMENT les transitions entre états
     // =============================================
     updateState() {
+        // Si le joueur est mort → retour en patrouille, on arrête tout
+        if (this.player.isDead()) {
+            this.state = "patrol";
+            return;
+        }
+
         const distToPlayer = this.pos.dist(this.player.pos);
 
         switch (this.state) {
@@ -158,28 +179,24 @@ class Enemy extends Vehicle {
         }
     }
 
-    // --- Patrol : followPath() + avoid() composés ---
     executePatrol() {
         let followForce = this.followPath(this.patrolPath, this.patrolArrivalRange);
         followForce.mult(this.weightArrive);
         this.applyForce(followForce);
 
-        // TODO : décommenter quand les obstacles seront prêts
-        // let avoidForce = this.avoid(obstacles);
-        // avoidForce.mult(this.weightAvoid);
-        // this.applyForce(avoidForce);
+        let avoidForce = this.avoid(obstacles);
+        avoidForce.mult(this.weightAvoid);
+        this.applyForce(avoidForce);
     }
 
-    // --- Pursue : pursue() le joueur ---
     executePursue() {
         let force = this.pursue(this.player);
         force.mult(this.weightPursue);
         this.applyForce(force);
 
-        // TODO : décommenter quand les obstacles seront prêts
-        // let avoidForce = this.avoid(obstacles);
-        // avoidForce.mult(this.weightAvoid);
-        // this.applyForce(avoidForce);
+        let avoidForce = this.avoid(obstacles);
+        avoidForce.mult(this.weightAvoid);
+        this.applyForce(avoidForce);
     }
 
     // --- Attack : freinage + décompte du coup ---
@@ -198,6 +215,22 @@ class Enemy extends Vehicle {
     executeCooldown() {
         this.vel.mult(0.9);
         this.cooldownTimer--;
+    }
+
+
+    // =============================================
+    // COMBAT
+    // =============================================
+    takeDamage(amount) {
+        if (this.invincibleTimer > 0) return;
+        this.hp           = max(0, this.hp - amount);
+        this.isHurt       = true;
+        this.hurtTimer    = this.hurtDuration;
+        this.invincibleTimer = this.invincibleDuration;
+    }
+ 
+    isDead() {
+        return this.hp <= 0;
     }
 
     // =============================================
@@ -272,10 +305,17 @@ class Enemy extends Vehicle {
     // SHOW — rendu sprite + debug
     // =============================================
     show() {
+        if (this.isDead()) return; // ne rien afficher si mort
+
         let anim = this.animations[this.currentAnim];
         if (!anim.img) return;
 
         let sx = this.animFrame * anim.frameW;
+
+        // Flash rouge si blessé
+        if (this.isHurt) {
+            tint(255, 80, 80, 200);
+        }
 
         push();
         translate(this.pos.x, this.pos.y);
@@ -284,9 +324,53 @@ class Enemy extends Vehicle {
         image(anim.img, 0, 0, this.displaySize, this.displaySize, sx, 0, anim.frameW, anim.frameH);
         pop();
 
+        noTint();
+
+        // Barre de vie au-dessus de l'ennemi
+        this.drawHealthBar();
+
         super.show();
         if (Vehicle.debug) this.debugDraw();
     }
+
+
+    // =============================================
+    // BARRE DE VIE
+    // =============================================
+    drawHealthBar() {
+        let barW    = 60;
+        let barH    = 6;
+        let barX    = this.pos.x - barW / 2;
+        let barY    = this.pos.y - this.displaySize /4 - 5;
+        let fillW   = (this.hp / this.maxHp) * barW;
+ 
+        // Couleur selon % de vie
+        let barColor = this.hp > this.maxHp * 0.5
+            ? color(0, 220, 0)    // vert > 50%
+            : this.hp > this.maxHp * 0.25
+                ? color(255, 165, 0) // orange > 25%
+                : color(220, 0, 0);  // rouge ≤ 25%
+ 
+        push();
+        noStroke();
+        // Fond gris
+        fill(60);
+        rect(barX, barY, barW, barH, 3);
+        // Vie restante
+        fill(barColor);
+        rect(barX, barY, fillW, barH, 3);
+        // Contour noir pour contraste
+        noFill();
+        stroke(0);
+        strokeWeight(2);
+        rect(barX, barY, barW, barH, 3);
+        // Contour blanc fin
+        stroke(255);
+        strokeWeight(0.5);
+        rect(barX, barY, barW, barH, 3);
+        pop();
+    }
+ 
 
     // =============================================
     // DEBUG

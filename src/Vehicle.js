@@ -22,7 +22,7 @@ class Vehicle {
     this.maxForce = 0.2;
 
     // Rayon de collision
-    this.r = 48;
+    this.r = 60;
 
     // Zone d'évitement devant le véhicule (obstacle avoidance)
     this.largeurZoneEvitement = this.r / 2;
@@ -173,7 +173,7 @@ class Vehicle {
   }
 
   // =============================================
-  // AVOID — évitement d'obstacles (technique du curling)
+  // AVOID — évitement d'obstacles 
   // =============================================
   avoid(obstacles) {
     if (!obstacles || obstacles.length === 0) return createVector(0, 0);

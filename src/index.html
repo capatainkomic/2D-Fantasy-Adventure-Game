@@ -1,22 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="fr">
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Sketch</title>
-
-    <!--<link rel="stylesheet" type="text/css" href="style.css">-->
+    <title>Realm's Edge</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
 
     <script src="../librairies/p5.min.js"></script>
     <script src="../librairies/p5.sound.min.js"></script>
     <script src="./utils/GameMap.js"></script>
+    <script src="./utils/Camera.js"></script>
+    <script src="./utils/CombatSystem.js"></script>
     <script src="./Vehicle.js"></script>
     <script src="./entities/Player.js"></script>
     <script src="./entities/Enemy.js"></script>
+    <script src="./effects/DustParticle.js"></script>
+    <script src="./effects/StarburstParticle.js"></script>
+    <script src="./objects/Collectible.js"></script>
+    <script src="./objects/Coin.js"></script>
+    <script src="./objects/Meat.js"></script>
+    <script src="./objects/Obstacle.js"></script>
+    <script src="./ui/HUD.js"></script>
     <script src="./sketch.js"></script>
-  </head>
-  <body>
-    <!-- Pas besoin de déclarer un canvas pour dessiner en P5.js -->
-  </body>
+</head>
+<body>
+
+    <!-- Nuages sur les bords gauche et droit du canvas -->
+    <div id="clouds">
+        <img class="cloud left"  style="top: 5%"  src="../assets/ui/Clouds/Clouds_01.png">
+        <img class="cloud left"  style="top: 30%" src="../assets/ui/Clouds/Clouds_03.png">
+        <img class="cloud left"  style="top: 55%" src="../assets/ui/Clouds/Clouds_05.png">
+        <img class="cloud left"  style="top: 78%" src="../assets/ui/Clouds/Clouds_07.png">
+        <img class="cloud right" style="top: 12%" src="../assets/ui/Clouds/Clouds_02.png">
+        <img class="cloud right" style="top: 38%" src="../assets/ui/Clouds/Clouds_04.png">
+        <img class="cloud right" style="top: 62%" src="../assets/ui/Clouds/Clouds_06.png">
+        <img class="cloud right" style="top: 85%" src="../assets/ui/Clouds/Clouds_08.png">
+    </div>
+
+</body>
 </html>

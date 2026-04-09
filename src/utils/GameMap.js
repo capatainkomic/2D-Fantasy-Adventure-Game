@@ -12,7 +12,7 @@ class GameMap {
         this.foreground = null;
     
 
-        this.collisions = [];
+        this.obstacles = [];
         this.patrolPaths = [];
 
         this.waterFoamTiles = [];
@@ -38,16 +38,6 @@ class GameMap {
 
      parse() {
         for (let layer of this.mapData.layers) {
-        
-            /* if (layer.name === "collision") {  trees and bush layer 2     trees and bush layer
-                this.collisions = layer.objects;
-            }
-
-            if (layer.name === "path") {
-                for (let obj of layer.objects) {
-                    if (obj.polygon) this.paths.push(obj.polygon);
-                }
-            } */ 
 
             if (layer.name === "water foam layer") {
                 this.waterFoamTiles = layer.data;
@@ -74,6 +64,17 @@ class GameMap {
                     }
                 }
             }
+
+            if (layer.name === "obstacles") {
+                let sizes = [128, 192, 256];
+                for (let obj of layer.objects) {
+                    // Taille assignée aléatoirement parmi 3 options
+                    // (les objets sont des points sans dimension dans Tiled)
+                    let displaySize = sizes[floor(random(sizes.length))];
+                    this.obstacles.push(new Obstacle(obj.x, obj.y, displaySize));
+                }
+            }
+
         }
     }
 
@@ -162,5 +163,9 @@ class GameMap {
     // Retourne le chemin de patrouille à l'index donné
     getPatrolPath(index = 0) {
         return this.patrolPaths ? this.patrolPaths[index] : [];
+    }
+
+    getObstacles() {
+        return this.obstacles;
     }
 }

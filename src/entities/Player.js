@@ -34,13 +34,20 @@ class Player extends Vehicle {
         this.state = "idle";    // idle | run | attack | hurt | dead
         this.hp    = 100;
         this.maxHp = 100;
+        this.coins = 0; // compteur de pièces ramassées
         this.isAttacking = false;
         this.attackCooldown = 0;
         this.attackCooldownMax = 30;
         this.isHurt      = false;
 
-        // Direction du regard (1 = droite, -1 = gauche)
-        this.direction = 1;
+        // Invincibilité après dégâts
+        this.invincibleTimer    = 0;
+        this.invincibleDuration = 90; // 1.5s à 60fps
+        this.flashTimer         = 0;
+        this.flashInterval      = 6;  // alterne toutes les 6 frames
+
+        // Direction du regard
+        this.facingRight = true;
     }
 
     // =============================================
@@ -69,7 +76,7 @@ class Player extends Vehicle {
     // =============================================
     update() {
         // Ne pas bouger si en train d'attaquer ou blessé
-        if (!this.isAttacking && !this.isHurt) {
+        if (!this.isAttacking ) {
             this._applyMovement();
         }
 
@@ -79,33 +86,28 @@ class Player extends Vehicle {
         // Mise à jour animation
         this._updateAnimation();
 
-        // Direction du regard selon la vitesse
-        if (this.vel.x !== 0) {
-            this.direction = this.vel.x > 0 ? 1 : -1;
-        }
+        if (this.vel.x !== 0) this.facingRight = this.vel.x > 0;
     }
 
     // =============================================
     // MOUVEMENT — seek souris + avoid obstacles + boundaries
     // =============================================
     _applyMovement() {
-        let mouseTarget = createVector(mouseX, mouseY);
+        let mouseTarget = screenToWorld(mouseX, mouseY);
 
-        // Distance à la souris — si trop proche on ne bouge pas
-        let distMouse = this.pos.dist(mouseTarget, true);
+        let distMouse = this.pos.dist(mouseTarget);
         if (distMouse < 20) return;
 
         let seekForce  = this.arrive(mouseTarget);
-        //let avoidForce = this.avoid(obstacles || []);
-        let boundForce = this.boundaries(0, 0, 3200, 3200, 100);
+        let avoidForce = this.avoid(obstacles);
+        let boundForce = this.boundaries(0, 0, MAP_W, MAP_H, 100);
 
-        // Poids des forces
         seekForce.mult(1.0);
-       // avoidForce.mult(3.0); // l'évitement est prioritaire
+        avoidForce.mult(3.0);
         boundForce.mult(2.0);
 
         this.applyForce(seekForce);
-        //this.applyForce(avoidForce);
+        this.applyForce(avoidForce);
         this.applyForce(boundForce);
     }
 
@@ -114,9 +116,14 @@ class Player extends Vehicle {
     // =============================================
     attack() {
         if (this.isAttacking || this.isHurt || this.attackCooldown > 0) return;
-        this.isAttacking = true;
-        this._setAnim("attack");
+
+        // Direction selon position souris dans le monde
+        let worldMouse = screenToWorld(mouseX, mouseY);
+        this.facingRight = worldMouse.x > this.pos.x;
+
+        this.isAttacking    = true;
         this.attackCooldown = this.attackCooldownMax;
+        this._setAnim("attack");
     }
 
     // Retourne true pendant les frames actives du slash (frames 4 et 5)
@@ -130,13 +137,17 @@ class Player extends Vehicle {
     // DÉGÂTS — appelé quand le joueur est touché
     // =============================================
     takeDamage(amount) {
-        if (this.isHurt) return;
-        this.hp -= amount;
-        this.hp = max(0, this.hp);
+        if (this.isHurt  || this.invincibleTimer > 0) return;
+        
+        this.hp    = max(0, this.hp - amount);
         this.isHurt = true;
-        this._setAnim("hurt");
+        this.invincibleTimer = this.invincibleDuration;
+        
+        if (!this.isAttacking) {
+            this._setAnim("hurt");
+        }
 
-        if (this.hp <= 0) {
+        if (this.isDead()) {
             this.state = "dead";
         }
     }
@@ -156,7 +167,9 @@ class Player extends Vehicle {
     }
 
     _updateAnimation() {
-        if (this.attackCooldown > 0) this.attackCooldown--;
+        if (this.attackCooldown > 0)  this.attackCooldown--;
+        if (this.invincibleTimer > 0) this.invincibleTimer--;
+        if (this.invincibleTimer <= 0) this.isHurt = false;
 
         // Choisir l'animation selon l'état
         if (!this.isAttacking && !this.isHurt) {
@@ -192,25 +205,33 @@ class Player extends Vehicle {
     // SHOW — rendu du sprite + debug
     // =============================================
     show() {
+        if (this.isDead()) return;
+
         let anim  = this.animations[this.currentAnim];
         let frame = anim.frames[this.frameIndex];
-
         if (!frame) return;
+
+
+        // Flash d'invincibilité — alterne visible/invisible
+        if (this.invincibleTimer > 0) {
+            this.flashTimer++;
+            // Alterne toutes les flashInterval frames
+            if (this.flashTimer % (this.flashInterval * 2) < this.flashInterval) {
+                // Flash rouge semi-transparent
+                tint(255, 80, 80, 180);
+            } else {
+                tint(255, 255, 255, 80); // semi-transparent
+            }
+        }
 
         push();
         translate(this.pos.x, this.pos.y);
-
-        // Retourner le sprite selon la direction
-        if (this.direction === -1) {
-            scale(-1, 1); // flip horizontal
-        }
-
-        // Le personnage est centré dans l'image 900x900
-        // On affiche en displaySize x displaySize centré sur this.pos
+        if (!this.facingRight) scale(-1, 1);
         imageMode(CENTER);
         image(frame, 0, 0, this.displaySize, this.displaySize);
-
         pop();
+
+        noTint();
 
         // Debug Vehicle (rayon collision + trainée)
         super.show();
@@ -218,11 +239,10 @@ class Player extends Vehicle {
         // Debug HP
         if (Vehicle.debug) {
             push();
-            fill(255);
-            noStroke();
-            textSize(12);
-            textAlign(CENTER);
+            fill(255); noStroke();
+            textSize(12); textAlign(CENTER);
             text(`HP: ${this.hp}`, this.pos.x, this.pos.y - this.displaySize / 2 - 10);
+            text(`[${this.state}]`, this.pos.x, this.pos.y - this.displaySize / 2 - 25);
             pop();
         }
     }
