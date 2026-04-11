@@ -165,6 +165,11 @@ class GameMap {
         return this.patrolPaths ? this.patrolPaths[index] : [];
     }
 
+    // Retourne tous les chemins de patrouille
+    getAllPatrolPaths() {
+        return this.patrolPaths || [];
+    }
+
     getObstacles() {
         return this.obstacles;
     }

@@ -55,15 +55,15 @@ class Enemy extends Vehicle {
         this.invincibleTimer    = 0;
         this.invincibleDuration = 30; // frames d'invincibilité
 
-        // --- Animations (spritesheet une ligne par animation) ---
+        // --- Animations — référencent les images statiques partagées ---
         this.animations = {
-            idle:             { img: null, frames: 12, frameW: 3840/12, frameH: 320 },
-            run:              { img: null, frames: 6,  frameW: 1920/6,  frameH: 320 },
-            attack_right:     { img: null, frames: 3,  frameW: 960/3,   frameH: 320 },
-            attack_up_right:  { img: null, frames: 3,  frameW: 960/3,   frameH: 320 },
-            attack_up:        { img: null, frames: 3,  frameW: 960/3,   frameH: 320 },
-            attack_down:      { img: null, frames: 3,  frameW: 960/3,   frameH: 320 },
-            attack_down_right:{ img: null, frames: 3,  frameW: 960/3,   frameH: 320 },
+            idle:             { get img() { return Enemy.imgs.idle; },              frames: 12, frameW: 3840/12, frameH: 320 },
+            run:              { get img() { return Enemy.imgs.run; },               frames: 6,  frameW: 1920/6,  frameH: 320 },
+            attack_right:     { get img() { return Enemy.imgs.attack_right; },      frames: 3,  frameW: 960/3,   frameH: 320 },
+            attack_up_right:  { get img() { return Enemy.imgs.attack_up_right; },   frames: 3,  frameW: 960/3,   frameH: 320 },
+            attack_up:        { get img() { return Enemy.imgs.attack_up; },         frames: 3,  frameW: 960/3,   frameH: 320 },
+            attack_down:      { get img() { return Enemy.imgs.attack_down; },       frames: 3,  frameW: 960/3,   frameH: 320 },
+            attack_down_right:{ get img() { return Enemy.imgs.attack_down_right; }, frames: 3,  frameW: 960/3,   frameH: 320 },
         };
 
         this.currentAnim  = "idle";
@@ -73,18 +73,26 @@ class Enemy extends Vehicle {
         this.facingRight  = true; // true = droite, false = gauche (flip)
     }
 
-    // =============================================
-    // PRELOAD — charger les spritesheets
-    // =============================================
-    preload() {
+    // Images partagées entre tous les ennemis — chargées une seule fois
+    static imgs = {
+        idle:              null,
+        run:               null,
+        attack_right:      null,
+        attack_up_right:   null,
+        attack_up:         null,
+        attack_down:       null,
+        attack_down_right: null,
+    };
+
+    static preload() {
         const dir = "../assets/characters/Lancer";
-        this.animations.idle.img             = loadImage(`${dir}/Lancer_Idle.png`);
-        this.animations.run.img              = loadImage(`${dir}/Lancer_Run.png`);
-        this.animations.attack_right.img     = loadImage(`${dir}/Lancer_Right_Attack.png`);
-        this.animations.attack_up_right.img  = loadImage(`${dir}/Lancer_UpRight_Attack.png`);
-        this.animations.attack_up.img        = loadImage(`${dir}/Lancer_Up_Attack.png`);
-        this.animations.attack_down.img      = loadImage(`${dir}/Lancer_Down_Attack.png`);
-        this.animations.attack_down_right.img= loadImage(`${dir}/Lancer_DownRight_Attack.png`);
+        Enemy.imgs.idle              = loadImage(`${dir}/Lancer_Idle.png`);
+        Enemy.imgs.run               = loadImage(`${dir}/Lancer_Run.png`);
+        Enemy.imgs.attack_right      = loadImage(`${dir}/Lancer_Right_Attack.png`);
+        Enemy.imgs.attack_up_right   = loadImage(`${dir}/Lancer_UpRight_Attack.png`);
+        Enemy.imgs.attack_up         = loadImage(`${dir}/Lancer_Up_Attack.png`);
+        Enemy.imgs.attack_down       = loadImage(`${dir}/Lancer_Down_Attack.png`);
+        Enemy.imgs.attack_down_right = loadImage(`${dir}/Lancer_DownRight_Attack.png`);
     }
 
     // =============================================

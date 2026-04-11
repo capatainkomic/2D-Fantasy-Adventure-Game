@@ -7,9 +7,9 @@ class StarBurstParticle {
 
     static img        = null;
     static frameW     = 4096 / 8;  // 512px par colonne
-    static frameH     = 4096 / 7;  // ~585px par ligne
+    static frameH     = 4096 / 8;  // ~512px par ligne
     static frameCount = 8;         // colonnes par ligne
-    static rowCount   = 7;         // lignes totales
+    static rowCount   = 8;         // lignes totales
 
     static preload() {
         StarBurstParticle.img = loadImage("../assets/particle FX/Star_Burst_spritesheet.png");

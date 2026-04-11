@@ -13,25 +13,30 @@ class HUD {
         this.goldBanner   = null; // banner gold coin counter
 
         // Barre de vie
-        this.barBase      = null;
         this.barFill      = null;
         this.barBaseLeft  = null;
         this.barBaseMid   = null;
         this.barBaseRight = null;
 
         this.font = null;
+
+        // Icône info
+        this.infoIcon      = null;
+        this._infoIconX    = 0;
+        this._infoIconY    = 0;
+        this._infoIconSize = 44;
     }
 
     preload() {
         this.playerAvatar = loadImage("../assets/ui/Human Avatars/Avatar_Sword_Hero.png");
         this.enemyBanner  = loadImage("../assets/ui/Banners/enemy_banner.png");
         this.goldBanner   = loadImage("../assets/ui/Banners/gold_coin_banner.png");
-        this.barBase      = loadImage("../assets/ui/Bars/BigBar_Base.png");
         this.barBaseLeft  = loadImage("../assets/ui/Bars/BigBar_Base_Left.png");
         this.barBaseMid   = loadImage("../assets/ui/Bars/BigBar_Base_Middle.png");
         this.barBaseRight = loadImage("../assets/ui/Bars/BigBar_Base_Right.png");
         this.barFill      = loadImage("../assets/ui/Bars/BigBar_Fill.png");
         this.font         = loadFont("../assets/fonts/JollyLodger-Regular.ttf");
+        this.infoIcon     = loadImage("../assets/ui/Icons/info.png");
     }
 
     update() {
@@ -42,6 +47,42 @@ class HUD {
         this.drawPlayerHealth(player, w, h);
         this.drawEnemyCounter(enemies, w, h);
         this.drawGoldCounter(player, w, h);
+        this.drawInfoIcon(w, h);
+    }
+
+    // =============================================
+    // ICÔNE INFO — à gauche du banner gold coin
+    // =============================================
+    drawInfoIcon(w, h) {
+        if (!this.infoIcon) return;
+
+        // Même calcul que drawGoldCounter pour trouver la position du gold banner
+        let bannerW     = 440;
+        let scale       = 0.38;
+        let bw          = bannerW * scale; // ~167px
+        let goldBannerX = w - bw * 2 - 20;
+
+        let size = this._infoIconSize;
+        let x    = goldBannerX - size / 2 - 8;
+        let y    = size / 2 + 10;
+
+        let hovered = (mouseX > x - size/2 && mouseX < x + size/2 &&
+                       mouseY > y - size/2 && mouseY < y + size/2);
+        let sc = hovered ? 1.25 : 1.0;
+
+        this._infoIconX = x;
+        this._infoIconY = y;
+
+        push();
+        imageMode(CENTER);
+        image(this.infoIcon, x, y, size * sc, size * sc);
+        pop();
+    }
+
+    isInfoIconClicked(mx, my) {
+        let size = this._infoIconSize;
+        return (mx > this._infoIconX - size/2 && mx < this._infoIconX + size/2 &&
+                my > this._infoIconY - size/2 && my < this._infoIconY + size/2);
     }
 
     // =============================================

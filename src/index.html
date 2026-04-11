@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="../assets/ui/Human Avatars/Avatar_Sword_Hero.png">
     <title>Realm's Edge</title>
     <link rel="stylesheet" type="text/css" href="./style.css">
 
@@ -14,6 +15,7 @@
     <script src="./Vehicle.js"></script>
     <script src="./entities/Player.js"></script>
     <script src="./entities/Enemy.js"></script>
+    <script src="./entities/Sheep.js"></script>
     <script src="./effects/DustParticle.js"></script>
     <script src="./effects/StarburstParticle.js"></script>
     <script src="./objects/Collectible.js"></script>
@@ -21,9 +23,23 @@
     <script src="./objects/Meat.js"></script>
     <script src="./objects/Obstacle.js"></script>
     <script src="./ui/HUD.js"></script>
+    <script src="./ui/PopupManager.js"></script>
+    <script src="./ui/InfoPopup.js"></script>
     <script src="./sketch.js"></script>
 </head>
 <body>
+
+    <!-- Zone de jeu — canvas + loader ensemble -->
+    <div id="game-wrapper">
+
+        <!-- Loader — visible au départ, caché quand canvas prêt -->
+        <div id="loading-screen">
+            <img src="../assets/ui/Loader/loading.gif" alt="Loading...">
+        </div>
+
+        <!-- Canvas p5.js injecté ici via cnv.parent('game-wrapper') -->
+
+    </div>
 
     <!-- Nuages sur les bords gauche et droit du canvas -->
     <div id="clouds">
