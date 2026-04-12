@@ -331,6 +331,9 @@ class PopupManager {
         let hovered = (mouseX > cx - bw/2 && mouseX < cx + bw/2 &&
                        mouseY > cy - bh/2 && mouseY < cy + bh/2);
 
+        if (hovered) soundManager.playHover('popup_btn');
+        else         soundManager.clearHover();
+
         // Scale up au hover seulement (pas quand pressé)
         let sc = (hovered && !this.btnPressed) ? 1.08 : 1.0;
         let dw = bw * sc;
@@ -370,7 +373,8 @@ class PopupManager {
 
         if (mx > this._btnX && mx < this._btnX + this._btnW &&
             my > this._btnY && my < this._btnY + this._btnH) {
-            return true; // signal pour restart
+            soundManager.playSelected();
+            return true;
         }
         return false;
     }

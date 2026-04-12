@@ -25,6 +25,7 @@ class CombatSystem {
             enemy.takeDamage(5);
             if (enemy.isDead()) {
                 this.spawnDeathParticle(enemy);
+                soundManager.playEnemyDeath();
             }
         }
     }

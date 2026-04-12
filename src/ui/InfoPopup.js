@@ -15,7 +15,8 @@ class InfoPopup {
         gifMove:       null,
         gifShake:      null,
         gifAttack:     null, // player_attaque.gif
-        imgEnemyAtk:   null, // enemy_attack.png
+        imgEnemyAvatar:   null, // enemy_avatar.png
+        obstacleFrame: null, // gold stone spritesheet
         sheepFrame:    null,
         font:          null,
     };
@@ -30,8 +31,9 @@ class InfoPopup {
         InfoPopup.imgs.gifMove     = loadImage("../assets/images/how_to_move.gif");
         InfoPopup.imgs.gifShake    = loadImage("../assets/images/mouse_shake.gif");
         InfoPopup.imgs.gifAttack   = loadImage("../assets/images/player_attack.gif");
-        InfoPopup.imgs.imgEnemyAtk = loadImage("../assets/images/enemy_attack.png");
-        InfoPopup.imgs.sheepFrame  = loadImage("../assets/characters/Sheep/Sheep_Idle.png");
+        InfoPopup.imgs.imgEnemyAvatar   = loadImage("../assets/ui/Human Avatars/Avatar_Enemy.png");
+        InfoPopup.imgs.obstacleFrame = loadImage("../assets/world/sprites/Gold Stones/Gold Stone 6_Highlight.png");
+        InfoPopup.imgs.sheepFrame    = loadImage("../assets/characters/Sheep/Sheep_Idle.png");
         InfoPopup.imgs.font        = loadFont("../assets/fonts/JollyLodger-Regular.ttf");
     }
 
@@ -144,6 +146,7 @@ class InfoPopup {
                 this._hoveredTab = i;
             }
         }
+        
     }
 
     _drawTabs(bx, by, imgs) {
@@ -283,68 +286,64 @@ class InfoPopup {
 
     // ─── Tab 3 : World ───
     _drawTabWorld(x, y, w, imgs) {
-        noStroke();
-        textSize(14);
-        textAlign(LEFT, TOP);
+        let cx = x + w / 2;
 
-        // Timer
+        // ─── Message centré en haut ───
+        noStroke();
+        textAlign(CENTER, TOP);
+        textSize(35);
+        fill('#2A1A15');
+        text("Explore the world and survive!", cx - 13, y - 3);
+        fill('#91F0AE');
+        text("Explore the world and survive!", cx - 15, y - 5);
+
+        // ─── 3 colonnes sous le message ───
+        let colY    = y + 100;
+        let colW    = w / 3;
+        let col1X   = x + colW * 0 + colW / 2;
+        let col2X   = x + colW * 1 + colW / 2;
+        let col3X   = x + colW * 2 + colW / 2;
+        let imgSize = 80;
+
+        // ── Colonne 1 : Timer ──
+        noStroke();
         fill(255, 220, 80);
-        textSize(28);
-        text("3:00", x, y + 15);
-        fill(255, 210, 140);
-        textSize(13);
-        text("You have 3 minutes to", x + 70, y + 10);
-        text("eliminate all enemies.", x + 70, y + 26);
+        textSize(32);
+        textAlign(CENTER, TOP);
+        text("3:00", col1X + 25, colY + 20);
 
-        // Séparation
-        stroke(100, 65, 20, 100);
-        strokeWeight(1);
-        line(x, y + 50, x + w - 20, y + 50);
-        noStroke();
+        fill(255, 230, 140);
+        textSize(20);
+        text("You have 3 minutes", col1X + 25, colY + imgSize + 8);
+        text("to eliminate all enemies.", col1X + 25,  colY + imgSize + 24);
 
-        // Sheep
-        if (imgs.sheepFrame) {
-            imageMode(CORNER);
-            // Prend le premier frame du spritesheet sheep idle
-            image(imgs.sheepFrame, x, y + 60, 40, 40,
+        // ── Colonne 2 : Obstacles ──
+        if (imgs.obstacleFrame) {
+            imageMode(CENTER);
+            image(imgs.obstacleFrame,
+                  col2X, colY + imgSize / 2,
+                  imgSize, imgSize,
                   0, 0, 128, 128);
         }
-        fill(255, 210, 140);
-        textSize(13);
-        text("Sheep flee from you and", x + 50, y + 65);
-        text("from enemies.", x + 50, y + 81);
+        fill(255, 230, 140);
+        textSize(20);
+        textAlign(CENTER, TOP);
+        text("Gold Stones block", col2X, colY + imgSize + 8);
+        text("movement —", col2X, colY + imgSize + 24);
+        text("go around!", col2X, colY + imgSize + 40);
 
-        // Séparation
-        stroke(100, 65, 20, 100);
-        line(x, y + 110, x + w - 20, y + 110);
-        noStroke();
-
-        // Obstacles
-        fill(255, 210, 140);
-        textSize(13);
-        text("⬡ Gold Stones block", x, y + 125);
-        text("  movement — go around!", x, y + 141);
-
-        // Séparation
-        stroke(100, 65, 20, 100);
-        line(x, y + 165, x + w - 20, y + 165);
-        noStroke();
-
-        // Enemies
-        fill(255, 210, 140);
-        textSize(13);
-        text("⚔ Enemies patrol paths,", x, y + 178);
-        text("  pursue & attack on sight.", x, y + 194);
-        text("  Each has 20 HP.", x, y + 210);
-
-        // ─── Enemy attack image ───
-        if (imgs.imgEnemyAtk) {
-            imageMode(CORNER);
-            image(imgs.imgEnemyAtk, x + w - 120, y + 165, 110, 80);
+        // ── Colonne 3 : Enemies ──
+        if (imgs.imgEnemyAvatar) {
+            imageMode(CENTER);
+            image(imgs.imgEnemyAvatar,
+                  col3X - 35, colY + imgSize / 2,
+                  imgSize, imgSize);
         }
-        fill(255, 160, 120);
-        textSize(12);
-        text("Dodge their attacks!", x + w - 120, y + 252);
+        fill(255, 230, 140);
+        textSize(20);
+        textAlign(CENTER, TOP);
+        text("Enemies patrol paths,", col3X - 35, colY + imgSize + 8);
+        text("pursue & attack on sight.", col3X - 35, colY + imgSize + 24);
     }
 
     // =============================================
@@ -356,6 +355,9 @@ class InfoPopup {
 
         this._btnHovered = (mouseX > cx - bw/2 && mouseX < cx + bw/2 &&
                             mouseY > cy - bh/2 && mouseY < cy + bh/2);
+
+        if (this._btnHovered) soundManager.playHover('resume_btn');
+        else                  soundManager.clearHover();
 
         let sc = this._btnHovered ? 1.08 : 1.0;
         let dw = bw * sc;
@@ -399,6 +401,7 @@ class InfoPopup {
             if (mx > tx - 25 && mx < tx + this.swordW &&
                 my > ty && my < ty + this.swordH) {
                 this.activeTab = i;
+                soundManager.playSelected();
                 return false;
             }
         }
@@ -407,7 +410,8 @@ class InfoPopup {
         if (mx > this._btnX && mx < this._btnX + this._btnW &&
             my > this._btnY && my < this._btnY + this._btnH) {
             this.active = false;
-            return true; // signal fermeture
+            soundManager.playSelected();
+            return true;
         }
 
         return false;

@@ -1,7 +1,4 @@
 
-
-
-
 ## 🧱 Core Principles (NON-NEGOTIABLE)
 
 ### 1. Vehicle Model

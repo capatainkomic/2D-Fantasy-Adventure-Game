@@ -19,6 +19,7 @@ class Meat extends Collectible {
 
     onCollect(player) {
         player.hp = min(player.maxHp, player.hp + 5);
+        soundManager.playHeal();
     }
 
     show() {

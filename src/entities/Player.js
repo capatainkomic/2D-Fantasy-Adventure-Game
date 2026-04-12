@@ -124,6 +124,7 @@ class Player extends Vehicle {
         this.isAttacking    = true;
         this.attackCooldown = this.attackCooldownMax;
         this._setAnim("attack");
+        soundManager.playSwordSlash();
     }
 
     // Retourne true pendant les frames actives du slash (frames 4 et 5)
@@ -142,6 +143,7 @@ class Player extends Vehicle {
         this.hp    = max(0, this.hp - amount);
         this.isHurt = true;
         this.invincibleTimer = this.invincibleDuration;
+        soundManager.playHit();
         
         if (!this.isAttacking) {
             this._setAnim("hurt");

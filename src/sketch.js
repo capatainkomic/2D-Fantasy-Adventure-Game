@@ -48,6 +48,7 @@ function preload() {
 
     PopupManager.preload();
     InfoPopup.preload();
+    soundManager.preload();
 }
 
 function setup() {
@@ -106,6 +107,8 @@ function setup() {
     // Swap loader → canvas
     document.getElementById('game-wrapper').classList.add('ready');
 
+    soundManager.startMusic();
+
     frameRate(60);
 }
 
@@ -147,17 +150,13 @@ function draw() {
         let killed       = enemies.length - aliveEnemies.length;
 
         if (aliveEnemies.length === 0) {
-            // WIN — tous les ennemis éliminés
             gameOver = true;
-            popupManager.showWin(
-                player.coins, killed, enemies.length,
-                player.hp, gameTimer
-            );
+            popupManager.showWin(player.coins, killed, enemies.length, player.hp, gameTimer);
+            soundManager.playWin();
         } else if (player.isDead() || gameTimer <= 0) {
-            // GAME OVER — joueur mort ou temps écoulé
             gameOver = true;
             popupManager.showGameOver(player.coins, killed, enemies.length);
-            
+            soundManager.playGameOver();
         }
     } else {
         // Jeu arrêté — on affiche juste les entités figées
@@ -269,6 +268,7 @@ function _restartGame() {
     }
 
     popupManager.active = false;
+    soundManager.startMusic();
 }
 
 // ─── Spawn collectibles —
@@ -277,6 +277,7 @@ function spawnCollectibles(x, y) {
     for (let i = 0; i < coinCount; i++) collectibles.push(new Coin(x, y));
     if (random() < 0.2) collectibles.push(new Meat(x, y));
     collectibles.push(new StarBurstParticle(x, y, 256)); // effet visuel
+    soundManager.playSparkle();
 }
 
 // ─── Détection agitation souris ───

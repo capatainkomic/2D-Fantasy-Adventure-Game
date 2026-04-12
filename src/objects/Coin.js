@@ -18,6 +18,7 @@ class Coin extends Collectible {
 
     onCollect(player) {
         player.coins = (player.coins || 0) + 1;
+        soundManager.playCoinCollect();
     }
 
     show() {
