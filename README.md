@@ -79,9 +79,9 @@ L'interface affiche les données vitales du jeu en haut de la page.
 Pour les besoins du cours, un système de debug complet a été intégré. Il permet d'analyser les vecteurs de force qui dictent les mouvements des entités.
 
 <p align="center">
-  <img src="./assets/images/debug_panel_view_1.png" width="200">
-  <img src="./assets/images/debug_panel.gif" width="600" alt="Debug Transition">
-  <img src="./assets/images/debug_panel_view_2.png" width="200">
+  <img src="./assets/images/debug_panel_view_1.png" width="190">
+  <img src="./assets/images/debug_panel.gif" width="550" alt="Debug Transition">
+  <img src="./assets/images/debug_panel_view_2.png" width="190">
 </p>
 
 <p align="center">Appuyez sur la touche <b>'D'</b> pour afficher les pannel de debug</p>
