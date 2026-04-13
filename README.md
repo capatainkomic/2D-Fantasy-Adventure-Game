@@ -9,9 +9,13 @@
 
 ## 🌟 Introduction
 
-Les steering behaviors sont un ensemble de techniques introduites par Craig Reynolds à la fin des années 1980 pour simuler le déplacement autonome de personnages virtuels. Ces comportements permettent à des agents (appelés autonomous characters) de se déplacer de manière réaliste dans un environnement, sans suivre de trajectoire prédéfinie.   
+Avec l’essor récent de l’intelligence artificielle, notamment des modèles génératifs, son utilisation s’est largement répandue dans le quotidien des développeurs et plus globalement dans le domaine de l’informatique. Aujourd’hui, des outils comme ChatGPT ou GitHub Copilot permettent d’accélérer le développement, d’améliorer la qualité du code et de gagner en productivité. Par exemple, certaines études montrent que ces outils peuvent augmenter la vitesse de développement de 30 à 50 %. Cette évolution met en évidence l’importance de savoir utiliser efficacement ces technologies. 
 
-Le projet est né dans le but d’implémenter certaines de ces techniques à travers un jeu 2D ludique. 
+Dans ce contexte, le prompt engineering est devenu une compétence clé : la manière de formuler une requête influence directement la qualité des résultats générés. Il devient donc essentiel de comprendre comment interagir avec une IA afin de garder le contrôle sur les réponses produites, d’en améliorer la pertinence et de les adapter à ses besoins.
+
+Par ailleurs, les steering behaviors sont un ensemble de techniques introduites par Craig Reynolds à la fin des années 1980 pour simuler le déplacement autonome de personnages virtuels. Ces comportements permettent à des agents (appelés autonomous characters) de se déplacer de manière réaliste dans un environnement, sans suivre de trajectoire prédéfinie.
+
+Ce projet s’inscrit dans cette double perspective : d’une part, implémenter les différentes techniques proposées par Craig Reynolds, et d’autre part, initier une réflexion sur l’utilisation efficace de l’intelligence artificielle,  travers un jeu 2D ludique.
 
 <br>
 
@@ -146,118 +150,131 @@ Le cœur du projet repose sur l'implémentation des algorithmes de **Craig Reyno
 
 <br>
 
+---
+
+<br>
+
 ## 🤖 Utilisation de l'assistant IA : processus et retour d'expérience
 
 ### L’approche : hybride et itérative
 
-Plutôt que de tout déléguer à l’IA, j’ai choisi une approche **mixte** :
+Plutôt que de déléguer entièrement le travail à l’IA, une approche **hybride** a été adoptée :
 
-- **Moi** : conception des spécifications, écriture des fichiers fondateurs (`Vehicle.js`, `sketch.js`), implémentation du code qui touche ux steeringbehaviour, refactorisation,  validation finale
-- **L’IA (Claude 3.5 Sonnet & Haiku)** : génération du code fonctionnel annexe qui touche a la théorie de jeu, refactorisation, documentation, correction de bugs
+- **Partie humaine** : conception des spécifications, développement des fichiers principaux (Vehicle.js, sketch.js), implémentation des mécanismes liés aux steering behaviors, refactorisation et validation finale
+- **IA**  : génération de code annexe (notamment lié à la théorie des jeux), assistance à la refactorisation, rédaction de documentation et correction de bugs
 
-L’objectif : **comprendre profondément les steering behaviors** en touchant moi-même à ce qui compte vraiment, tout en laissant l’IA gérer la masse de code annexe. 
+L’objectif est de **comprendre les steering behaviors** en intervenant directement sur les éléments essentiels, tout en utilisant l’IA pour gérer les parties secondaires et accélérer le développement.
 
 <br>
 
 ### Phase 1 — Spécifications d’abord
-Avant chaque prompt, je fournissais systématiquement à l’IA :
+Avant chaque interaction avec l’IA, je fournissais systématiquement deux fichiers :
 
-- `CONSTRAINTS.md` — les règles imposées par le professeur (Vehicle immutable, loi de steering, architecture 3 couches…)
-- `SPECIFICATIONS.md` — mes propres exigences fonctionnelles pour le MVP du projet
+- `CONSTRAINTS.md` — contenant les règles imposées par le professeur (immutabilité de Vehicle, lois de steering, architecture en 3 couches, etc.)
+- `SPECIFICATIONS.md` — décrivant les exigences fonctionnelles du MVP du projet
 
-Résultat : le code respectait les contraintes dans environ 70% des cas. Le reste du temps, l’IA “oubliait” certaines règles (mutations directes de vel, comportements monolithiques…).
+Un fichier `CHANGES.md` était également utilisé pour stocker l’historique des modifications lorsque l’on demandait à l’IA de documenter les changements.
 
+Cette méthode permettait d’obtenir un code conforme aux contraintes dans environ 70 % des cas. Cependant, plusieurs limites sont apparues :
 
-### Phase 2 — Le problème du code “pas assez propre”
-Au fil des itérations, le code fonctionnait… mais devenait difficile à maintenir :
+- l’IA oubliait parfois certaines règles (mutations directes, mauvaise séparation des comportements)
+- le fichier `CHANGES.md` était parfois écrasé au lieu d’être complété
+- la structure de la documentation manquait de cohérence au fil du temps
 
-- Il y avait beaucoup de duplication
-- Pas de séparation claire des responsabilités
-- Les corrections introduisaient parfois de nouveaux bugs
+Ces problèmes ont motivé l’évolution du processus dans les phases suivantes.
 
-J’ai donc changé de méthode.
+<br>
 
-### Phase 3 — Restructuraction du processus d'implémentation
-J’ai mis en place un processus en 4 fichiers + 1 donné par le professeur:
+### Phase 2 — Les limites d’un code fonctionnel mais peu propre
+Au fil des itérations, le code devenait fonctionnel, mais sa qualité se dégradait progressivement :
+
+- duplication importante
+- responsabilités mal séparées
+- corrections introduisant parfois de nouveaux bugs
+
+Face à ces problèmes, une évolution de la méthode s’est imposée.
+
+<br>
+
+### Phase 3 — Restructuration du processus d’implémentation
+J’ai mis en place un processus basé sur les fichiers suivant : 
 
 | Fichier | Rôle |
 | :--- | :---: |
-| SPECIFICATIONS.md | Ce que le jeu doit faire (MVP). j'ai mis a jour et completer les spécification du projet |
-| CONSTRAINTS.md | Les règles techniques imposées |
-| REFACTORING_INSTRUCTIONS.md | l'ensemble des travaux de refactoring à effectuer ainsi que Les principes de clean code à respecter |
-| CHANGES.md | Trace de chaque modification |
-| EXPLANATION.md | Documentation des concepts de jeu théoriques implémenté dans le projet|
+| `SPECIFICATIONS.md` | Ce que le jeu doit faire (MVP). j'ai mis a jour et completer les spécification du projet |
+| `CONSTRAINTS.md` | Définit les règles techniques à respecter |
+| `REFACTORING_INSTRUCTIONS.md` | Liste les actions de refactorisation et les principes de clean code |
+| `CHANGES.md` | Assure la traçabilité des modifications |
+| `EXPLANATION.md` | Documente les concepts théoriques de jeu 2D implémentés |
 
-#### Structuration des prompts 
+<br>
 
-**Des prompts intégrés directement dans les fichiers**
-Plutôt que d’écrire des prompts “à la volée”, j’ai conçu chaque fichier (CHANGES.md, EXPLANATION.md, REFACTORING_INSTRUCTIONS.md, etc.) avec un prompt en tête de fichier.
+### Structuration des prompts 
 
-Ces prompts servent de mode d’emploi permanent pour l’IA.
+#### Des prompts intégrés directement dans les fichiers
+Plutôt que de rédiger des prompts ponctuels, chaque fichier contient un prompt en en-tête servant de guide permanent pour l’IA.
 
-**Un prompt adapté à l’objectif de chaque fichier**
-Chaque fichier impose un comportement différent à l’IA :
+#### Un prompt adapté à l’objectif de chaque fichier
+`CHANGES.md — traçabilité technique`
+- ajout uniquement en fin de fichier
+- description précise et justifiée des modifications
+- respect des contraintes et spécifications
 
-`CHANGES.md — prompt de traçabilité technique`
+`EXPLANATION.md — approche pédagogique`  
+- utilisation d’une terminologie correcte
+- explication des concepts avant leur implémentation
+- lien avec les fichiers du projet
+- documentation limitée à ce qui est réellement implémenté
 
-Le prompt force l’IA à :
+`REFACTORING_INSTRUCTIONS.md — révision du code`
+- définition d’un plan de refactorisation
+- interdiction de certaines modifications sensibles
+- application stricte des principes de clean code
 
-- ne jamais écraser le contenu existant
-- ajouter uniquement à la fin (append)
-- décrire les changements de manière technique et justifiée
-- référencer les contraintes et spécifications
+<br>
 
+### Le cycle de developpment
+Le processus suit un cycle itératif :
 
-`EXPLANATION.md — prompt pédagogique`
+1. Demande de fonctionnalité (ou développement manuel) en s’appuyant sur `CONSTRAINTS.md` et `SPECIFICATIONS.md`
+2. Génération éventuelle du code par l’IA
+3. Validation humaine
+4. Refactorisation via `REFACTORING_INSTRUCTIONS.md`
+5. Mise à jour de `CHANGES.md`
+6. Mise à jour de `EXPLANATION.md`
 
-Le prompt impose :
+<br> 
 
-- de nommer correctement les concepts (terminologie exacte)
-- d’expliquer le principe avant l’implémentation
-- de lier chaque concept aux fichiers du projet
-- de documenter uniquement ce qui est réellement implémenté
-
-`REFACTORING_INSTRUCTIONS.md — prompt de revison de code`
-
-Ce fichier contient un prompt qui :
-
-- impose un plan de refactorrisation à effectuer 
-- interdit certaines actions (mutation de pos, modification de Vehicle.js, etc.)
-- définit des règles de clean code strictes à respecter
-
-#### Le cycle de processus 
-
-Le cycle :
-
-- Je demande une fonctionnalité à l’IA + lire CONSTRAINTS + SPECIFICATIONS / Je developpe une fonctionnalité 
-- L’IA génère le code (ou on saute cette étape) 
-- Je valide
-- Je demande à li'IA de refactorer le code en respectant les consigne du fichier REFACTORING_INSTRUCTIONS 
-- L'IA refactorise le code 
-- Je demande à l'IA  de mettre à jour CHANGES.md en respectant ses contraintes 
--L'IA met à jour le fichier CHANGES.md 
-- Je demande à l'IA  de mettre à jour EXPLANATION.md en respectant ses contraintes
-- L'IA met a jour le fichier EXPLANATION.md 
-
-#### Ce que ça a changé
+### Impact de cette approche
 
 |Avant | Après |
 | :--- | :---: |
-| Code fonctionnel mais brouillon |	Code structuré, maintenable , lisible |
-| Documentation non encadré	|  CHANGES.md + EXPLANATION.md complets et structure cohérente dans tout le fichier |
-| Refactoring manuel long	| Refactoring automatisé et cohérent |
+| Code fonctionnel mais désorganisé |	Code structuré, lisible et maintenable |
+| Documentation non encadré et irrégulière	|  Documentation complète et cohérente |
+| Refactorisation longue et manuelle	| Refactorisation guidée et cohérente |
+
+<br>
 
 ### Mon Expérience
 
 #### Ce que j'ai aimé
-- La satisfaction visuelle de voir le projet prendre vie : L'intégration des assets, de la map et des animations a rendu le projet concret et gratifiant.
-
-- La puissance des comportements : Voir par exemple les moutons se regrouper (Herd) et fuir devant moi de manière fluide et naturel .
+- Le rendu visuel et la progression du projet : voir les assets, la map et les animations s’intégrer progressivement a rendu le projet concret et motivant.
+- La puissance des comportements : observer, par exemple, les moutons se regrouper (Herd) et réagir de façon fluide et naturelle à mes actions a été particulièrement satisfaisant.
+- Découvrir des nouvelles techniques de théorie de jeu vidéo comme par exemple le tri-y.
 
 #### Ce que j'ai moins aimé
-Les phases de refactorisation longues dues à des prompts imprécis au début. Cela m'a appris l'importance de la clarté dans la communication avec une IA.
+- Les longues phases de refactorisation, souvent causées par des prompts imprécis au départ, ce qui m’a fait comprendre l’importance de la clarté dans la communication avec une IA.
+- Les répétitions dans certaines tâches. 
+- Le débogage, parfois long qui demandaient davantage de rigueur et d’attention que prévu.
 
-### CREDITS
+<br>
+
+---
+
+<br>
+
+
+## CREDITS
 #### AUDIO
 *Sound effects provided by Pixabay and independent artists*
 
@@ -274,8 +291,7 @@ Les phases de refactorisation longues dues à des prompts imprécis au début. C
 | | Heal Sound | ([leohpaz](https://opengameart.org/content/8-heals-and-buffs-sfx)) — Licence [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)|
 |**Musique de fond** | Battle I | ([xDeviruchi](https://xdeviruchi.itch.io/16-bit-fantasy-adventure-music-pack)) |
 
-
----
+<br>
 
 #### ASSETS GRAPHIQUES
 *Environnements et Personnages*
@@ -285,8 +301,7 @@ Les phases de refactorisation longues dues à des prompts imprécis au début. C
 | **Tiny Sword Asset Pack**  |  [Pixel Frog](https://pixelfrog-assets.itch.io/tiny-swords) |  
 | **Sword Hero Asset Pack**  |  [CartoonCoffee](https://cartooncoffee.itch.io/swordhero1) |   
 
-
----
+<br>
 
 #### EFFETS PARTICULES (VFX)
 *Systèmes de particules et visuels*
