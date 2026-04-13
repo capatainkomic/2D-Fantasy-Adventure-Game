@@ -82,13 +82,13 @@ Pour les besoins du cours, un système de debug complet a été intégré. Il pe
 
 
 <br>
-
+<br>
 
 <div align="center" >
   <img src="./assets/images/sea_divider.gif" width="100%" heigh="150">
 </div>
 
-
+<br>
 <br>
 
 ## <img src="./assets/images/boy_chibi.png" width="50">  Le Laboratoire des Steering Behaviors
@@ -150,6 +150,8 @@ Le cœur du projet repose sur l'implémentation des algorithmes de **Craig Reyno
   </tr>
 </table>
 
+
+<br>
 <br>
 
 <div align="center" height="75" >
@@ -157,6 +159,7 @@ Le cœur du projet repose sur l'implémentation des algorithmes de **Craig Reyno
 </div>
 
 
+<br>
 <br>
 
 ## <img src="./assets/images/boy_chibi.png" width="50">  Utilisation de l'assistant IA : processus et retour d'expérience
