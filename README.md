@@ -9,7 +9,9 @@
 
 ## 🌟 Introduction
 
-L’objectif principal est d’**implémenter et d’observer** les comportements autonomes issus des **Steering Behaviors** de **Craig Reynolds** via un jeu 2D
+Les steering behaviors sont un ensemble de techniques introduites par Craig Reynolds à la fin des années 1980 pour simuler le déplacement autonome de personnages virtuels. Ces comportements permettent à des agents (appelés autonomous characters) de se déplacer de manière réaliste dans un environnement, sans suivre de trajectoire prédéfinie.   
+
+Le projet est né dans le but d’implémenter certaines de ces techniques à travers un jeu 2D ludique. 
 
 <br>
 
@@ -21,30 +23,27 @@ L’objectif principal est d’**implémenter et d’observer** les comportement
 <br>
 
 
-
-## 🎮 Gameplay & User Interface
-
-### Core Experience
+## 🎮 Description du jeu 
 **The Adventure of The Sword Hero** est un jeu d'aventure et d'action 2D où vous incarnez un héros solitaire. Votre mission est simple mais périlleuse : explorer la carte et éliminer tous les ennemis pour triompher.
+
+### Contrôles 
 
 <table border="0">
   <tr>
-    <td width="40%" align="center">
-      <img src="./assets/images/how_to_move.gif" width="100%"><br>
-      <b>Fluid Movement</b><br>Contrôle précis à la souris 
+    <td width="25%" align="center">
+      <img src="./assets/images/how_to_move.gif" width="150"><br>
+      <b>Deplacement du héro</b><br>Contrôle à l'aide de la souris 
     </td>
-    <td width="40%" align="center">
-      <img src="./assets/images/player_attack.gif" width="100%"><br>
-      <b>Tactical Combat</b><br>Système de collision AABB synchronisé.
+    <td width="25%" align="center">
+      <img src="./assets/images/player_attack.gif" width="250"><br>
+      <b>Attaque contre les ennemis</b><br>Contrôle à l'aide du clique gauche
     </td>
-  </tr>
-  <tr>
-    <td width="40%" align="center">
-      <img src="./assets/images/mouse_shake.gif" width="100%"><br>
-      <b>Resource Spawning</b><br>Secouez la souris pour générer <i>Coins</i> et <i>Meat</i>.
+    <td width="25%" align="center">
+      <img src="./assets/images/mouse_shake.gif" width="150"><br>
+      <b>Resource Spawning</b><br>Secouez la souris pour générer des <i>pièces</i> et de la <i>Viande</i>.
     </td>
-    <td width="40%" align="center">
-      <img src="./assets/images/gold_stone_img.png" width="100%"><br>
+    <td width="25%" align="center">
+      <img src="./assets/images/gold_stone_img.png" width="150"><br>
       <b>Obstacles</b><br>Eviter les obstacles sur votre chemin.
     </td>
   </tr>
@@ -53,57 +52,53 @@ L’objectif principal est d’**implémenter et d’observer** les comportement
 <br>
 
 
-### 🖥️ HUD & Interactive Elements
-L'interface affichant les données vitales en haut de la page.
+### HUD & Interactive Elements
+L'interface affiche les données vitales du jeu en haut de la page.
 
 | Élément | Visuel | Description |
 | :--- | :---: | :--- |
-| **Barre de vie du joueur** | <img src="./assets/images/player_healthbar_img.png" width="150"> | Suivi des HP du héros. |
-| **Timer** | <img src="./assets/images/timer_img.png" width="150"> | Compte à rebours critique. |
-| **Compteurs** | <img src="./assets/images/counters_img.png" width="150"> | Compteur de pièces d'or et kill count des ennemis. |
-| **Info popup** | <img src="./assets/images/info pop up .gif" width="150"> | Accès instantanné au tutoriel et règles du jeu |
-| **Settings** | <img src="./assets/images/sound_setting_img.png" width="150"> | Panel de configuration pour le mixage Audio (Music & SFX). |
+| **Barre de vie du joueur** | <img src="./assets/images/player_healthbar_img.png" width="250"> | Suivi des points de vie du héros. |
+| **Timer** | <img src="./assets/images/timer_img.png" width="250"> | Compte à rebours. |
+| **Compteurs** | <img src="./assets/images/counters_img.png" width="250"> | Compteur de pièces d'or et compteur d'ennemis eliminés |
+| **Info popup** | <img src="./assets/images/info pop up .gif" width="250"> | Accès instantané au tutoriel et règles du jeu |
+| **Settings** | <img src="./assets/images/sound_setting_img.png" width="250"> | Panel de configuration pour le ajuster le volume de l'audio  |
 
 <br>
 
-### 🛠️ Système de debug avancé 
+### Système de Debug Avancé 
 Pour les besoins du cours, un système de debug complet a été intégré. Il permet d'analyser les vecteurs de force qui dictent les mouvements des entités.
 
 <p align="center">
-  <img src="./assets/images/debug_panel.gif" width="80%" alt="Debug Transition">
+  <img src="./assets/images/debug_panel_view_1.png" width="200">
+  <img src="./assets/images/debug_panel.gif" width="600" alt="Debug Transition">
+  <img src="./assets/images/debug_panel_view_2.png" width="200">
 </p>
 
-<table border="0">
-  <tr>
-    <td><img src="./assets/images/debug_panel_view_1.png" width="100%"></td>
-    <td><img src="./assets/images/debug_panel_view_2.png" width="100%"></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">
-      <i>Appuyez sur la touche <b>'D'</b> pour afficher les pannel de debug</i>
-    </td>
-  </tr>
-</table>
+<p align="center">Appuyez sur la touche <b>'D'</b> pour afficher les pannel de debug</p>
+
 
 <br>
 
 
 ---
 
+
+<br>
+
 ## 🧠 Le Laboratoire des Steering Behaviors
 
 Le cœur du projet repose sur l'implémentation des algorithmes de **Craig Reynolds**. Chaque entité possède un "cerveau" composé de plusieurs forces cumulées qui dictent son comportement de manière organique.
 
-### 👥 Analyse des Entités
+### Analyse des Entités
 
 <table border="0">
   <tr>
-    <td><img src="./assets/ui/Human Avatars/Avatar_Sword_Hero.png" width="1000"></td>
+    <td><img src="./assets/ui/Human Avatars/Avatar_Sword_Hero.png" width="300"></td>
     <td>
-      <b>Le Héros (Joueur)</b><br>
-      <i>Comportement : Pilotage fluide et précis.</i>
+      <b>Le Héros</b><br>
       <ul>
-        <li><b>Seek & Arrive</b> : Se dirige vers le curseur et ralentit naturellement à l'approche du point cible.</li>
+        <br>
+        <li><b>Seek + Arrive</b> : Se dirige vers le curseur et ralentit naturellement à l'approche du point cible.</li>
         <li><b>Obstacle Avoidance</b> : Calcule des forces de répulsion pour contourner les pierres d'or.</li>
         <li><b>Boundaries</b> : Reste confiné à l'intérieur des limites de la carte.</li>
       </ul>
@@ -111,38 +106,39 @@ Le cœur du projet repose sur l'implémentation des algorithmes de **Craig Reyno
   </tr>
   
   <tr>
-    <td><img src="./assets/ui/Human Avatars/Avatar_Enemy.png" width="1000"></td>
+    <td align="center"><img src="./assets/ui/Human Avatars/Avatar_Enemy.png" width="200"></td>
     <td>
       <b>L'Ennemi</b><br>
-      <i>Comportement : Patrouille et agression.</i>
+      <br>
       <ul>
         <li><b>Path Following</b> : Suit un chemin de patrouille prédéfini tant qu'aucune cible n'est détectée.</li>
         <li><b>Pursue</b> : Prédit la position future du joueur pour l'intercepter efficacement.</li>
-        <li><b>Obstacle Avoidance</b> : Évite les collisions avec l'environnement pendant la traque.</li>
+        <li><b>Obstacle Avoidance</b> : Évite les collisions avec l'environnement pendant son deplacement</li>
       </ul>
     </td>
   </tr>
 
   <tr>
-    <td><img src="./assets/ui/Human Avatars/Avatar_Sheep.png" width="1000"></td>
-    <td>
-      <b>Le Mouton (Pnj)</b><br>
-      <i>Comportement : Intelligence de groupe (Flocking).</i>
+    <td align="center"><img src="./assets/ui/Human Avatars/Avatar_Sheep.png" width="100"></td>
+    <td height="230">
+      <b>Le Mouton</b><br>
+      <br>
       <ul>
         <li><b>Herd (Boids)</b> : Utilise <i>Separation</i> (ne pas s'entrechoquer), <i>Alignment</i> (suivre la direction du groupe) et <i>Cohesion</i> (rester groupés).</li>
         <li><b>Flee</b> : S'enfuit paniqué à l'approche du joueur ou d'un ennemi.</li>
-        <li><b>Obstacle Avoidance</b> : Se déplace fluidement entre les obstacles malgré la panique.</li>
+        <li><b>Obstacle Avoidance</b> : Évite les collisions avec l'environnement pendant son deplacement.</li>
+        <li><b>Edges</b> : Peut se teleporter de l'autre coté de la map</li>
       </ul>
     </td>
   </tr>
 
   <tr>
-    <td><img src="./assets/ui/gold coin.png" width="100"><img src="./assets/world/objects/Meat Resource.png" width="100"></td>
-    <td>
+    <td align="center"><img src="./assets/ui/gold coin.png" width="50"><img src="./assets/world/objects/Meat Resource.png" width="50"></td>
+    <td height="100">
       <b>Collectibles (Pièces & Viande)</b><br>
-      <i>Comportement : Attraction magnétique.</i>
+      <br>
       <ul>
-        <li><b>Seek</b> : Ces objets sont attirés par le joueur pour faciliter la collecte dès qu'ils apparaissent.</li>
+        <li><b>Seek</b> : Ces objets sont attirés par le joueur.</li>
       </ul>
     </td>
   </tr>
