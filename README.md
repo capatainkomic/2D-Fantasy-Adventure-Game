@@ -2,8 +2,14 @@
 
 
 <p align="center">
-  <img src="./assets/images/hero_running_banner.png" alt="Sword Hero Running" width="100%">
+  <a href="https://youtu.be/tceqGfH8194" alt="Video youtube du gameplay de The Adventure of The Sword Hero">
+    <img src="./assets/images/hero_running_banner.png" alt="Sword Hero Running" width="100%">
+  </a>
 </p>
+
+<a href="https://youtu.be/tceqGfH8194"><i>Lien vers la vidéo youtube du Gameplay</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <a href=""><i>Lien vers le jeu deployé en ligne</i></a>  
+
+
 
 
 
