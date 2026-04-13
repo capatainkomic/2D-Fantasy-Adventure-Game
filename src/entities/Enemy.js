@@ -1,79 +1,5 @@
 class Enemy extends Vehicle {
 
-    // =============================================
-    // ÉTATS POSSIBLES
-    // patrol   → suit le chemin de patrouille
-    // pursue   → poursuit le joueur
-    // attack   → exécute un coup
-    // cooldown → attend entre deux attaques
-    // =============================================
-
-    constructor(x, y, gameMap, player) {
-        super(x, y);
-
-        // --- Mouvement ---
-        this.maxSpeed = 2;
-        this.maxForce = 0.15;
-        this.r        = 32;
-
-        // --- Affichage ---
-        this.displaySize = 256;
-
-        // --- Références externes ---
-        this.gameMap = gameMap;
-        this.player  = player;
-
-        // --- Poids des forces (réglables via DebugPanel) ---
-        this.weightArrive = 1.0;
-        this.weightPursue = 1.0;
-        this.weightAvoid  = 5.0;
-
-        // --- Patrouille ---
-        this.patrolPath         = [];
-        this.patrolArrivalRange = 50;
-
-        // --- Rayons de perception ---
-        this.attackRange  = 120; // distance → déclenche une attaque
-        this.pursuitRange = 300; // distance → déclenche la poursuite
-        this.leashRange   = 400; // distance → abandonne et retourne en patrouille
-
-        // --- Attaque ---
-        this.attackTimer      = 0;   // décompte de la durée du coup courant
-        this.attackDuration   = 9;   // durée d'un coup : 3 frames × frameDelay 3
-        this.cooldownTimer    = 0;   // décompte du temps entre deux attaques
-        this.cooldownDuration = 180; // 2 secondes à 60fps
-
-        // --- Machine à états ---
-        this.state = "patrol";
-
-         // --- Combat ---
-        this.hp              = 20;
-        this.maxHp           = 20;
-        this.isHurt          = false;
-        this.hurtTimer       = 0;
-        this.hurtDuration    = 20;  // frames du flash rouge
-        this.invincibleTimer    = 0;
-        this.invincibleDuration = 30; // frames d'invincibilité
-
-        // --- Animations — référencent les images statiques partagées ---
-        this.animations = {
-            idle:             { get img() { return Enemy.imgs.idle; },              frames: 12, frameW: 3840/12, frameH: 320 },
-            run:              { get img() { return Enemy.imgs.run; },               frames: 6,  frameW: 1920/6,  frameH: 320 },
-            attack_right:     { get img() { return Enemy.imgs.attack_right; },      frames: 3,  frameW: 960/3,   frameH: 320 },
-            attack_up_right:  { get img() { return Enemy.imgs.attack_up_right; },   frames: 3,  frameW: 960/3,   frameH: 320 },
-            attack_up:        { get img() { return Enemy.imgs.attack_up; },         frames: 3,  frameW: 960/3,   frameH: 320 },
-            attack_down:      { get img() { return Enemy.imgs.attack_down; },       frames: 3,  frameW: 960/3,   frameH: 320 },
-            attack_down_right:{ get img() { return Enemy.imgs.attack_down_right; }, frames: 3,  frameW: 960/3,   frameH: 320 },
-        };
-
-        this.currentAnim  = "idle";
-        this.animFrame    = 0;
-        this.animDelay    = 3; // frames p5 entre chaque image
-        this.animTimer    = 0;
-        this.facingRight  = true; // true = droite, false = gauche (flip)
-    }
-
-    // Images partagées entre tous les ennemis — chargées une seule fois
     static imgs = {
         idle:              null,
         run:               null,
@@ -95,172 +21,182 @@ class Enemy extends Vehicle {
         Enemy.imgs.attack_down_right = loadImage(`${dir}/Lancer_DownRight_Attack.png`);
     }
 
-    // =============================================
-    // UPDATE — Architecture 3 couches (CONSTRAINTS.md)
-    // Couche 1 : Action Selection → updateState()
-    // Couche 2 : Steering         → executeState()
-    // Couche 3 : Locomotion       → super.update()
-    // =============================================
-    update() {
-        if (this.isDead()) return; // ne plus updater si mort
- 
+    constructor(x, y) {
+        super(x, y);
+
+        this.maxSpeed    = 2;
+        this.maxForce    = 0.15;
+        this.r           = 32;
+        this.displaySize = 256;
+
+        this.patrolPath         = [];
+        this.patrolArrivalRange = 50;
+
+        this.attackRange  = 120;
+        this.pursuitRange = 300;
+        this.leashRange   = 400;
+
+        this.attackTimer      = 0;
+        this.attackDuration   = 9;
+        this.cooldownTimer    = 0;
+        this.cooldownDuration = 180;
+
+        this.state = "patrol";
+
+        this.hp                 = 20;
+        this.maxHp              = 20;
+        this.isHurt             = false;
+        this.hurtTimer          = 0;
+        this.hurtDuration       = 20;
+        this.invincibleTimer    = 0;
+        this.invincibleDuration = 30;
+
+        this._targetPos    = null;
+        this._targetVel    = null;
+        this._targetIsDead = true;
+
+        this.animations = {
+            idle:             { get img() { return Enemy.imgs.idle; },              frames: 12, frameW: 3840/12, frameH: 320 },
+            run:              { get img() { return Enemy.imgs.run; },               frames: 6,  frameW: 1920/6,  frameH: 320 },
+            attack_right:     { get img() { return Enemy.imgs.attack_right; },      frames: 3,  frameW: 960/3,   frameH: 320 },
+            attack_up_right:  { get img() { return Enemy.imgs.attack_up_right; },   frames: 3,  frameW: 960/3,   frameH: 320 },
+            attack_up:        { get img() { return Enemy.imgs.attack_up; },         frames: 3,  frameW: 960/3,   frameH: 320 },
+            attack_down:      { get img() { return Enemy.imgs.attack_down; },       frames: 3,  frameW: 960/3,   frameH: 320 },
+            attack_down_right:{ get img() { return Enemy.imgs.attack_down_right; }, frames: 3,  frameW: 960/3,   frameH: 320 },
+        };
+
+        this.currentAnim = "idle";
+        this.animFrame   = 0;
+        this.animDelay   = 3;
+        this.animTimer   = 0;
+        this.facingRight = true;
+
+        // Enregistrement des behaviors — les poids sont modifiables via behaviors.setWeight()
+        this.behaviors = new BehaviorManager(this);
+        this.behaviors
+            .add('followPath', (ctx) => this.followPath(ctx.path, this.patrolArrivalRange), 1.0)
+            .add('pursue',     (ctx) => this.pursue({ pos: ctx.targetPos, vel: ctx.targetVel }), 1.0)
+            .add('avoid',      (ctx) => this.avoid(ctx.obstacles), 5.0)
+            .add('attackDrag', (ctx) => this.vel.copy().mult(-0.2), 1.0)
+            .add('cooldownDrag',(ctx) => this.vel.copy().mult(-0.1), 1.0);
+
+        // Presets par état — sauvegardés une fois le constructeur terminé
+        // (savePreset() capture l'état des poids et des enabled au moment de l'appel)
+        this._initPresets();
+    }
+
+    _initPresets() {
+        // Preset patrol : followPath + avoid actifs
+        this.behaviors.disable('pursue').disable('attackDrag').disable('cooldownDrag');
+        this.behaviors.savePreset('patrol');
+
+        // Preset pursue : pursue + avoid actifs
+        this.behaviors.disable('followPath').enable('pursue').disable('attackDrag').disable('cooldownDrag');
+        this.behaviors.savePreset('pursue');
+
+        // Preset attack : seul attackDrag actif
+        this.behaviors.disable('followPath').disable('pursue').disable('avoid').enable('attackDrag').disable('cooldownDrag');
+        this.behaviors.savePreset('attack');
+
+        // Preset cooldown : seul cooldownDrag actif
+        this.behaviors.disable('followPath').disable('pursue').disable('avoid').disable('attackDrag').enable('cooldownDrag');
+        this.behaviors.savePreset('cooldown');
+
+        // Revenir à l'état patrol par défaut
+        this.behaviors.loadPreset('patrol');
+        this.behaviors.enable('followPath').enable('avoid');
+    }
+
+    update(obstacles, targetPos, targetVel, targetIsDead) {
+        if (this.isDead()) return;
+
+        this._targetPos    = targetPos;
+        this._targetVel    = targetVel;
+        this._targetIsDead = targetIsDead;
+
         if (this.hurtTimer > 0)       this.hurtTimer--;
         if (this.invincibleTimer > 0) this.invincibleTimer--;
         if (this.hurtTimer <= 0)      this.isHurt = false;
 
-        this.updateState();
-        this.executeState();
-        super.update();
-        this.updateAnimation();
+        this.updateState();           // Couche 1 — Action Selection
+        this.executeState(obstacles); // Couche 2 — Steering via BehaviorManager
+        super.update();               // Couche 3 — Locomotion
+        this.updateAnimation();       // Couche 3 — Animation
 
-        // Direction du regard uniquement quand l'ennemi se déplace
         if (this.state === "patrol" || this.state === "pursue") {
-            if (this.vel.x !== 0) {
-                this.facingRight = this.vel.x > 0;
-            }
+            if (this.vel.x !== 0) this.facingRight = this.vel.x > 0;
         }
     }
 
-    // =============================================
-    // COUCHE 1 — Mise à jour de l'état
-    // Gère UNIQUEMENT les transitions entre états
-    // =============================================
+    // Couche 1 — Action Selection
     updateState() {
-        // Si le joueur est mort → retour en patrouille, on arrête tout
-        if (this.player.isDead()) {
-            this.state = "patrol";
+        if (this._targetIsDead) {
+            this._transitionTo("patrol");
             return;
         }
 
-        const distToPlayer = this.pos.dist(this.player.pos);
+        const distToTarget = this.pos.dist(this._targetPos);
 
         switch (this.state) {
-
             case "patrol":
-                if (distToPlayer < this.pursuitRange) {
-                    this.state = "pursue";
-                }
+                if (distToTarget < this.pursuitRange) this._transitionTo("pursue");
                 break;
 
             case "pursue":
-                if (distToPlayer > this.leashRange) {
-                    this.state = "patrol";
-                } else if (distToPlayer < this.attackRange) {
-                    this.startAttack();
-                }
+                if (distToTarget > this.leashRange)       this._transitionTo("patrol");
+                else if (distToTarget < this.attackRange) this.startAttack();
                 break;
 
             case "attack":
-                // La fin de l'attaque est gérée dans executeAttack()
                 break;
 
             case "cooldown":
                 if (this.cooldownTimer <= 0) {
-                    if (distToPlayer > this.leashRange) {
-                        // Joueur trop loin → abandon
-                        this.state = "patrol";
-                        this.cooldownTimer = 0;
-                    } else if (distToPlayer >= this.attackRange) {
-                        // Joueur s'éloigne → poursuite
-                        this.state = "pursue";
-                        this.cooldownTimer = 0;
-                    } else {
-                        // Joueur encore à portée → attaque
-                        this.startAttack();
-                    }
+                    if (distToTarget > this.leashRange)        this._transitionTo("patrol");
+                    else if (distToTarget >= this.attackRange) this._transitionTo("pursue");
+                    else                                       this.startAttack();
                 }
-
                 break;
         }
     }
 
-    // =============================================
-    // COUCHE 2 — Exécution du comportement courant
-    // Chaque état applique ses forces via applyForce()
-    // =============================================
-    executeState() {
-        switch (this.state) {
-            case "patrol":   this.executePatrol();   break;
-            case "pursue":   this.executePursue();   break;
-            case "attack":   this.executeAttack();   break;
-            case "cooldown": this.executeCooldown(); break;
+    // Charge le preset correspondant à l'état cible
+    _transitionTo(newState) {
+        this.state = newState;
+        this.behaviors.loadPreset(newState);
+    }
+
+    // Couche 2 — Steering via BehaviorManager
+    executeState(obstacles) {
+        const ctx = {
+            obstacles,
+            path:      this.patrolPath,
+            targetPos: this._targetPos,
+            targetVel: this._targetVel,
+        };
+
+        if (this.state === "attack") {
+            this.attackTimer--;
+            if (this.attackTimer <= 0) {
+                this.cooldownTimer = this.cooldownDuration;
+                this._transitionTo("cooldown");
+            }
         }
+
+        if (this.state === "cooldown") this.cooldownTimer--;
+
+        this.applyForce(this.behaviors.compute(ctx));
     }
 
-    executePatrol() {
-        let followForce = this.followPath(this.patrolPath, this.patrolArrivalRange);
-        followForce.mult(this.weightArrive);
-        this.applyForce(followForce);
-
-        let avoidForce = this.avoid(obstacles);
-        avoidForce.mult(this.weightAvoid);
-        this.applyForce(avoidForce);
-    }
-
-    executePursue() {
-        let force = this.pursue(this.player);
-        force.mult(this.weightPursue);
-        this.applyForce(force);
-
-        let avoidForce = this.avoid(obstacles);
-        avoidForce.mult(this.weightAvoid);
-        this.applyForce(avoidForce);
-    }
-
-    // --- Attack : freinage + décompte du coup ---
-    executeAttack() {
-        this.vel.mult(0.8); // freine pour s'arrêter pendant le coup
-        this.attackTimer--;
-
-        if (this.attackTimer <= 0) {
-            // Coup terminé → passe en cooldown
-            this.state = "cooldown";
-            this.cooldownTimer = this.cooldownDuration;
-        }
-    }
-
-    // --- Cooldown : attend sur place ---
-    executeCooldown() {
-        this.vel.mult(0.9);
-        this.cooldownTimer--;
-    }
-
-
-    // =============================================
-    // COMBAT
-    // =============================================
-    takeDamage(amount) {
-        if (this.invincibleTimer > 0) return;
-        this.hp           = max(0, this.hp - amount);
-        this.isHurt       = true;
-        this.hurtTimer    = this.hurtDuration;
-        this.invincibleTimer = this.invincibleDuration;
-    }
- 
-    isDead() {
-        return this.hp <= 0;
-    }
-
-    // =============================================
-    // LANCER UNE ATTAQUE
-    // Calcule l'angle UNE SEULE FOIS et fige l'animation
-    // =============================================
     startAttack() {
-        this.state       = "attack";
+        this._transitionTo("attack");
         this.attackTimer = this.attackDuration;
 
-        // Direction vers le joueur au moment du lancement
-        let dir   = p5.Vector.sub(this.player.pos, this.pos);
-        let angle = dir.heading();
-
-        this.setAttackAnimation(angle);
-        this.facingRight = this.player.pos.x >= this.pos.x;
+        const dir = p5.Vector.sub(this._targetPos, this.pos);
+        this.setAttackAnimation(dir.heading());
+        this.facingRight = this._targetPos.x >= this.pos.x;
     }
 
-    // =============================================
-    // CHOISIR L'ANIMATION D'ATTAQUE selon l'angle
-    // Secteurs de 45° couvrant les 8 directions
-    // =============================================
     setAttackAnimation(angle) {
         let deg = degrees(angle);
         if (deg < 0) deg += 360;
@@ -275,9 +211,27 @@ class Enemy extends Vehicle {
         else                                   this.setAnim("attack_up_right");
     }
 
-    // =============================================
-    // GESTION DES ANIMATIONS
-    // =============================================
+    takeDamage(amount) {
+        if (this.invincibleTimer > 0) return;
+        this.hp              = max(0, this.hp - amount);
+        this.isHurt          = true;
+        this.hurtTimer       = this.hurtDuration;
+        this.invincibleTimer = this.invincibleDuration;
+    }
+
+    isDead() { return this.hp <= 0; }
+
+    reset(x, y) {
+        this.pos.set(x, y);
+        this.vel.set(0, 0);
+        this.acc.set(0, 0);
+        this.hp            = this.maxHp;
+        this.cooldownTimer = 0;
+        this.attackTimer   = 0;
+        this._transitionTo("patrol");
+    }
+
+    // Couche 3 — Animation
     setAnim(name) {
         if (this.currentAnim === name) return;
         this.currentAnim = name;
@@ -286,142 +240,97 @@ class Enemy extends Vehicle {
     }
 
     updateAnimation() {
-        // Chaque état dicte son animation
         switch (this.state) {
             case "patrol":
             case "pursue":
                 this.setAnim(this.vel.mag() > 0.1 ? "run" : "idle");
-                break;
-            case "attack":
-                // Animation figée — définie dans startAttack()
                 break;
             case "cooldown":
                 this.setAnim("idle");
                 break;
         }
 
-        // Avance les frames
         this.animTimer++;
         if (this.animTimer >= this.animDelay) {
             this.animTimer = 0;
-            let anim = this.animations[this.currentAnim];
+            const anim = this.animations[this.currentAnim];
             this.animFrame = (this.animFrame + 1) % anim.frames;
         }
     }
 
-    // =============================================
-    // SHOW — rendu sprite + debug
-    // =============================================
     show() {
-        if (this.isDead()) return; // ne rien afficher si mort
+        if (this.isDead()) return;
 
-        let anim = this.animations[this.currentAnim];
+        const anim = this.animations[this.currentAnim];
         if (!anim.img) return;
 
-        let sx = this.animFrame * anim.frameW;
-
-        // Flash rouge si blessé
-        if (this.isHurt) {
-            tint(255, 80, 80, 200);
-        }
+        if (this.isHurt) tint(255, 80, 80, 200);
 
         push();
         translate(this.pos.x, this.pos.y);
         if (!this.facingRight) scale(-1, 1);
         imageMode(CENTER);
-        image(anim.img, 0, 0, this.displaySize, this.displaySize, sx, 0, anim.frameW, anim.frameH);
+        image(anim.img, 0, 0, this.displaySize, this.displaySize,
+              this.animFrame * anim.frameW, 0, anim.frameW, anim.frameH);
         pop();
 
         noTint();
-
-        // Barre de vie au-dessus de l'ennemi
         this.drawHealthBar();
-
         super.show();
         if (Vehicle.debug) this.debugDraw();
     }
 
-
-    // =============================================
-    // BARRE DE VIE
-    // =============================================
     drawHealthBar() {
-        let barW    = 60;
-        let barH    = 6;
-        let barX    = this.pos.x - barW / 2;
-        let barY    = this.pos.y - this.displaySize /4 - 5;
-        let fillW   = (this.hp / this.maxHp) * barW;
- 
-        // Couleur selon % de vie
-        let barColor = this.hp > this.maxHp * 0.5
-            ? color(0, 220, 0)    // vert > 50%
+        const barW     = 60;
+        const barH     = 6;
+        const barX     = this.pos.x - barW / 2;
+        const barY     = this.pos.y - this.displaySize / 4 - 5;
+        const fillW    = (this.hp / this.maxHp) * barW;
+        const barColor = this.hp > this.maxHp * 0.5
+            ? color(0, 220, 0)
             : this.hp > this.maxHp * 0.25
-                ? color(255, 165, 0) // orange > 25%
-                : color(220, 0, 0);  // rouge ≤ 25%
- 
+                ? color(255, 165, 0)
+                : color(220, 0, 0);
+
         push();
         noStroke();
-        // Fond gris
-        fill(60);
-        rect(barX, barY, barW, barH, 3);
-        // Vie restante
-        fill(barColor);
-        rect(barX, barY, fillW, barH, 3);
-        // Contour noir pour contraste
+        fill(60);       rect(barX, barY, barW,  barH, 3);
+        fill(barColor); rect(barX, barY, fillW, barH, 3);
         noFill();
-        stroke(0);
-        strokeWeight(2);
-        rect(barX, barY, barW, barH, 3);
-        // Contour blanc fin
-        stroke(255);
-        strokeWeight(0.5);
-        rect(barX, barY, barW, barH, 3);
+        stroke(0);   strokeWeight(2);   rect(barX, barY, barW, barH, 3);
+        stroke(255); strokeWeight(0.5); rect(barX, barY, barW, barH, 3);
         pop();
     }
- 
 
-    // =============================================
-    // DEBUG
-    // =============================================
     debugDraw() {
         push();
         noFill();
+        stroke(255, 0, 0, 150);   circle(this.pos.x, this.pos.y, this.attackRange  * 2);
+        stroke(255, 165, 0, 150); circle(this.pos.x, this.pos.y, this.pursuitRange * 2);
+        stroke(255, 255, 0, 100); circle(this.pos.x, this.pos.y, this.leashRange   * 2);
 
-        // Rouge  = portée d'attaque
-        stroke(255, 0, 0, 150);
-        circle(this.pos.x, this.pos.y, this.attackRange * 2);
-
-        // Orange = portée de poursuite
-        stroke(255, 165, 0, 150);
-        circle(this.pos.x, this.pos.y, this.pursuitRange * 2);
-
-        // Jaune  = portée de laisse (retour patrouille)
-        stroke(255, 255, 0, 100);
-        circle(this.pos.x, this.pos.y, this.leashRange * 2);
-
-        // Chemin de patrouille
-        if (this.patrolPath && this.patrolPath.length > 1) {
+        if (this.patrolPath?.length > 1) {
             stroke(0, 255, 0);
             beginShape();
-            for (let p of this.patrolPath) vertex(p.x, p.y);
+            for (const p of this.patrolPath) vertex(p.x, p.y);
             endShape(CLOSE);
         }
 
-        // Point cible courant sur le chemin
-        if (this.patrolPath.length > 0) {
-            let target = this.patrolPath[this._pathIndex % this.patrolPath.length];
-            fill(255, 0, 255); noStroke();
-            circle(target.x, target.y, 10);
+        // Affiche les behaviors actifs et leurs poids
+        const behaviorList = this.behaviors.list();
+        fill(255); noStroke(); textSize(10); textAlign(LEFT);
+        let debugY = this.pos.y - this.displaySize / 2 - 10;
+        for (const b of behaviorList) {
+            fill(b.enabled ? color(100, 255, 100) : color(150));
+            text(`${b.name}: ${b.weight.toFixed(1)}`, this.pos.x - 40, debugY);
+            debugY -= 12;
         }
 
-        // État + cooldown
-        fill(255); noStroke();
-        textSize(12); textAlign(CENTER);
+        fill(255); noStroke(); textSize(12); textAlign(CENTER);
         text(`[${this.state}]`, this.pos.x, this.pos.y - this.displaySize / 2 - 10);
         if (this.cooldownTimer > 0) {
             text(`cd: ${this.cooldownTimer}`, this.pos.x, this.pos.y - this.displaySize / 2 - 25);
         }
-
         pop();
     }
 }

@@ -11,7 +11,15 @@ function findProjection(pos, a, b) {
 }
 
 class Vehicle {
-  static debug = false;
+  static debug            = false; // active tout (trainée + rayon collision)
+  static debugAvoid       = false;
+  static debugWander      = false;
+  static debugPath        = false;
+  static debugPursue      = false;
+  static debugBoundaries  = false;
+  static debugSeparate    = false;
+  static debugCohesion    = false;
+  static debugAlign       = false;
 
   constructor(x, y) {
     this.pos = createVector(x, y);
@@ -88,18 +96,22 @@ class Vehicle {
       target = points[this._pathIndex];
     }
 
-    if (Vehicle.debug) {
+    if (Vehicle.debug || Vehicle.debugPath) {
       push();
-      // Dessin du chemin
-      noFill(); stroke(0, 255, 0); strokeWeight(1);
-      for (let i = 0; i < points.length; i++) {
-        let a = points[i];
-        let b = points[(i + 1) % points.length];
-        line(a.x, a.y, b.x, b.y);
-      }
-      // Point cible courant
-      fill(255, 0, 255); noStroke();
-      circle(target.x, target.y, 12);
+      // Route grise épaisse
+      strokeJoin(ROUND);
+      stroke(175); strokeWeight(40); noFill();
+      beginShape();
+      for (let i = 0; i < points.length; i++) vertex(points[i].x, points[i].y);
+      endShape(CLOSE);
+      // Ligne centrale noire fine
+      stroke(0); strokeWeight(1); noFill();
+      beginShape();
+      for (let i = 0; i < points.length; i++) vertex(points[i].x, points[i].y);
+      endShape(CLOSE);
+      // Point cible courant — rouge
+      fill(255, 0, 0); noStroke();
+      circle(target.x, target.y, 10);
       pop();
     }
 
@@ -122,11 +134,12 @@ class Vehicle {
     prediction.mult(10);
     target.add(prediction);
 
-    if (Vehicle.debug) {
-      push();
-      fill(0, 255, 0); noStroke();
+    if (Vehicle.debug || Vehicle.debugPursue) {
+      // Vecteur vitesse de la target (rouge — couleur par défaut de drawVector)
+      this.drawVector(vehicle.pos, vehicle.vel.copy().mult(10), "red");
+      // Cercle vert au point prédit devant la target
+      fill("green");
       circle(target.x, target.y, 16);
-      pop();
     }
 
     return this.seek(target);
@@ -156,13 +169,24 @@ class Vehicle {
 
     this.wanderTheta += random(-this.displaceRange, this.displaceRange);
 
-    if (Vehicle.debug) {
+    if (Vehicle.debug || Vehicle.debugWander) {
       push();
-      noFill(); stroke(255);
+      // Ligne pointillée du véhicule au centre du cercle
+      drawingContext.setLineDash([5, 15]);
+      stroke(255, 255, 255, 80); strokeWeight(2); noFill();
+      line(this.pos.x, this.pos.y, pointDevant.x, pointDevant.y);
+      drawingContext.setLineDash([]);
+      // Cercle blanc
+      noFill(); stroke(255); strokeWeight(1);
       circle(pointDevant.x, pointDevant.y, this.wanderRadius * 2);
+      // Point rouge = centre du cercle
+      fill("red"); noStroke();
+      circle(pointDevant.x, pointDevant.y, 8);
+      // Point vert = point cible sur le cercle
       fill("green"); noStroke();
-      circle(pointSurLeCercle.x, pointSurLeCercle.y, 12);
-      stroke("yellow");
+      circle(pointSurLeCercle.x, pointSurLeCercle.y, 14);
+      // Ligne jaune du véhicule au point vert
+      stroke("yellow"); strokeWeight(1); noFill();
       line(this.pos.x, this.pos.y, pointSurLeCercle.x, pointSurLeCercle.y);
       pop();
     }
@@ -186,15 +210,23 @@ class Vehicle {
     ahead2.mult(15);
     let pointAhead2 = p5.Vector.add(this.pos, ahead2);
 
-    if (Vehicle.debug) {
+    if (Vehicle.debug || Vehicle.debugAvoid) {
       push();
-      stroke(255, 80);
-      strokeWeight(this.largeurZoneEvitement * 2);
-      line(this.pos.x, this.pos.y, pointAhead.x, pointAhead.y);
-      fill("yellow"); noStroke();
+      // Vecteur jaune ahead
+      this.drawVector(this.pos, ahead, "yellow");
+      // Point rouge au bout de ahead
+      fill("red"); noStroke();
       circle(pointAhead.x, pointAhead.y, 10);
-      fill("lightblue");
+      // Vecteur violet ahead2
+      this.drawVector(this.pos, ahead2, "purple");
+      // Point bleu clair au bout de ahead2
+      fill("lightblue"); noStroke();
       circle(pointAhead2.x, pointAhead2.y, 10);
+      // Ligne épaisse blanche = zone d'évitement
+      stroke(255, 50);
+      strokeWeight(this.largeurZoneEvitement * 2);
+      noFill();
+      line(this.pos.x, this.pos.y, pointAhead.x, pointAhead.y);
       pop();
     }
 
@@ -212,7 +244,7 @@ class Vehicle {
 
     if (distance < obstacle.r + this.largeurZoneEvitement) {
       let force = p5.Vector.sub(pointLePlusProche, obstacle.pos);
-      if (Vehicle.debug) this.drawVector(obstacle.pos, force, "yellow");
+      if (Vehicle.debug || Vehicle.debugAvoid) this.drawVector(obstacle.pos, force, "yellow");
       force.setMag(this.maxSpeed);
       force.sub(this.vel);
       force.limit(this.maxForce);
@@ -238,7 +270,29 @@ class Vehicle {
         diff.div(d);
         steer.add(diff);
         count++;
+
+        if (Vehicle.debug || Vehicle.debugSeparate) {
+          push();
+          // Flèche magenta de l'entité qui s'éloigne du voisin
+          let repulsion = p5.Vector.sub(this.pos, other.pos);
+          repulsion.setMag(50);
+          this.drawVector(this.pos, repulsion, "magenta");
+          // Ligne pointillée vers le voisin trop proche
+          drawingContext.setLineDash([4, 8]);
+          stroke(255, 80, 255, 120); strokeWeight(1); noFill();
+          line(this.pos.x, this.pos.y, other.pos.x, other.pos.y);
+          drawingContext.setLineDash([]);
+          pop();
+        }
       }
+    }
+
+    if (Vehicle.debug || Vehicle.debugSeparate) {
+      push();
+      // Cercle de séparation
+      noFill(); stroke(255, 80, 255, 180); strokeWeight(1);
+      circle(this.pos.x, this.pos.y, desiredSeparation * 2);
+      pop();
     }
 
     if (count > 0) steer.div(count);
@@ -270,7 +324,29 @@ class Vehicle {
 
     if (count > 0) {
       sum.div(count);
+
+      if (Vehicle.debug || Vehicle.debugCohesion) {
+        push();
+        // Cercle de voisinage cyan
+        noFill(); stroke(80, 200, 255, 150); strokeWeight(1);
+        circle(this.pos.x, this.pos.y, neighbourDist * 2);
+        // Point cyan = centre de masse du groupe
+        fill(80, 200, 255); noStroke();
+        circle(sum.x, sum.y, 12);
+        // Flèche cyan de l'entité vers le centre de masse
+        this.drawVector(this.pos, p5.Vector.sub(sum, this.pos), "cyan");
+        pop();
+      }
+
       return this.seek(sum);
+    }
+
+    if (Vehicle.debug || Vehicle.debugCohesion) {
+      push();
+      // Cercle de voisinage — aucun voisin détecté
+      noFill(); stroke(80, 200, 255, 60); strokeWeight(1);
+      circle(this.pos.x, this.pos.y, neighbourDist * 2);
+      pop();
     }
 
     return createVector(0, 0);
@@ -289,12 +365,37 @@ class Vehicle {
       if (d > 0 && d < neighbourDist) {
         sum.add(other.vel);
         count++;
+
+        if (Vehicle.debug || Vehicle.debugAlign) {
+          push();
+          // Petite flèche verte sur chaque voisin = sa vitesse
+          this.drawVector(other.pos, other.vel.copy().mult(10), "lightgreen");
+          pop();
+        }
       }
+    }
+
+    if (Vehicle.debug || Vehicle.debugAlign) {
+      push();
+      // Cercle de voisinage en pointillés vert clair
+      drawingContext.setLineDash([4, 8]);
+      noFill(); stroke(80, 255, 180, 150); strokeWeight(1);
+      circle(this.pos.x, this.pos.y, neighbourDist * 2);
+      drawingContext.setLineDash([]);
+      pop();
     }
 
     if (count > 0) {
       sum.div(count);
       sum.setMag(this.maxSpeed);
+
+      if (Vehicle.debug || Vehicle.debugAlign) {
+        push();
+        // Grande flèche blanche = direction moyenne résultante
+        this.drawVector(this.pos, sum.copy().mult(15), "white");
+        pop();
+      }
+
       let steer = p5.Vector.sub(sum, this.vel);
       steer.limit(this.maxForce);
       return steer;
@@ -324,15 +425,20 @@ class Vehicle {
       vitesseDesiree.setMag(this.maxSpeed);
       const force = p5.Vector.sub(vitesseDesiree, this.vel);
       force.limit(this.maxForce);
-
-      if (Vehicle.debug) {
-        push();
-        noFill(); stroke("red");
-        rect(bx + d, by + d, bw - 2 * d, bh - 2 * d);
-        pop();
-      }
-
       return force;
+    }
+
+    if (Vehicle.debug || Vehicle.debugBoundaries) {
+      push();
+      noFill();
+      // Rectangle extérieur blanc
+      stroke("red");
+      strokeWeight(5);
+      rect(bx, by, bw, bh);
+      // Rectangle intérieur rouge = zone de déclenchement
+      stroke("red");
+      rect(bx + d, by + d, bw - 2 * d, bh - 2 * d);
+      pop();
     }
 
     return createVector(0, 0);
@@ -342,12 +448,11 @@ class Vehicle {
   // EDGES — téléportation aux bords (NPC externes)
   // =============================================
   edges() {
-    if (this.pos.x > width + this.r)  this.pos.x = -this.r;
-    else if (this.pos.x < -this.r)    this.pos.x = width + this.r;
-    if (this.pos.y > height + this.r) this.pos.y = -this.r;
-    else if (this.pos.y < -this.r)    this.pos.y = height + this.r;
+    if (this.pos.x > MAP_W + this.r)  this.pos.x = -this.r;
+    else if (this.pos.x < -this.r)    this.pos.x = MAP_W + this.r;
+    if (this.pos.y > MAP_H + this.r)  this.pos.y = -this.r;
+    else if (this.pos.y < -this.r)    this.pos.y = MAP_H + this.r;
   }
-
   // =============================================
   // HELPERS
   // =============================================

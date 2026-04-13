@@ -25,6 +25,16 @@ class HUD {
         this._infoIconX    = 0;
         this._infoIconY    = 0;
         this._infoIconSize = 44;
+
+        // Icône paramètres
+        this.paramIcon        = null;
+        this.soundIcon        = null;
+        this.crossIcon        = null;
+        this.woodBanner       = null;
+        this._paramIconX      = 0;
+        this._paramIconY      = 0;
+        this._paramIconSize   = 44;
+        this._paramPanelOpen  = false;
     }
 
     preload() {
@@ -37,6 +47,10 @@ class HUD {
         this.barFill      = loadImage("../assets/ui/Bars/BigBar_Fill.png");
         this.font         = loadFont("../assets/fonts/JollyLodger-Regular.ttf");
         this.infoIcon     = loadImage("../assets/ui/Icons/info.png");
+        this.paramIcon    = loadImage("../assets/ui/Icons/parameter.png");
+        this.soundIcon    = loadImage("../assets/ui/Icons/sound.png");
+        this.crossIcon    = loadImage("../assets/ui/Icons/cross.png");
+        this.woodBanner   = loadImage("../assets/ui/Banners/wood_banner.png");
     }
 
     update() {
@@ -48,6 +62,8 @@ class HUD {
         this.drawEnemyCounter(enemies, w, h);
         this.drawGoldCounter(player, w, h);
         this.drawInfoIcon(w, h);
+        this.drawParamIcon(w, h);
+        if (this._paramPanelOpen) this.drawParamPanel(w, h);
     }
 
     // =============================================
@@ -83,6 +99,178 @@ class HUD {
         let size = this._infoIconSize;
         return (mx > this._infoIconX - size/2 && mx < this._infoIconX + size/2 &&
                 my > this._infoIconY - size/2 && my < this._infoIconY + size/2);
+    }
+
+    isParamIconClicked(mx, my) {
+        let size = this._paramIconSize;
+        return (mx > this._paramIconX - size/2 && mx < this._paramIconX + size/2 &&
+                my > this._paramIconY - size/2 && my < this._paramIconY + size/2);
+    }
+
+    toggleParamPanel() {
+        this._paramPanelOpen = !this._paramPanelOpen;
+    }
+
+    // =============================================
+    // ICÔNE PARAMETER — à gauche de l'icône info
+    // =============================================
+    drawParamIcon(w, h) {
+        if (!this.paramIcon) return;
+
+        let bannerW     = 440;
+        let scale       = 0.38;
+        let bw          = bannerW * scale;
+        let goldBannerX = w - bw * 2 - 20;
+
+        let size  = this._paramIconSize;
+        let infoX = goldBannerX - this._infoIconSize / 2 - 8;
+        let x     = infoX - size - 10;
+        let y     = size / 2 + 10;
+
+        let hovered = (mouseX > x - size/2 && mouseX < x + size/2 &&
+                       mouseY > y - size/2 && mouseY < y + size/2);
+        let sc = hovered ? 1.25 : 1.0;
+
+        this._paramIconX = x;
+        this._paramIconY = y;
+
+        push();
+        imageMode(CENTER);
+        image(this.paramIcon, x, y, size * sc, size * sc);
+        pop();
+    }
+
+    // =============================================
+    // PANEL PARAMÈTRES — wood banner avec sliders SFX + Music
+    // =============================================
+    drawParamPanel(w, h) {
+        if (!this.woodBanner) return;
+
+        let panelW = 340;
+        let panelH = 220;
+        let px     = this._paramIconX - panelW / 2;
+        let py     = this._paramIconY + this._paramIconSize / 2 + 8;
+
+        // Clamp dans l'écran
+        if (px < 8) px = 8;
+        if (px + panelW > w - 8) px = w - panelW - 8;
+
+        push();
+        imageMode(CORNER);
+        image(this.woodBanner, px, py, panelW, panelH);
+        pop();
+
+        if (this.font) textFont(this.font);
+
+        let cx    = px + panelW / 2;
+        let titleY = py + 26;
+
+        // Titre
+        push();
+        fill(40, 20, 5); noStroke();
+        textSize(22); textAlign(CENTER, CENTER);
+        text("Sound Settings", cx + 1, titleY + 1);
+        fill(255, 220, 140);
+        text("Sound Settings", cx, titleY);
+        pop();
+
+        // Ligne séparatrice
+        push();
+        stroke(100, 65, 20, 120); strokeWeight(1);
+        line(px + 30, titleY + 16, px + panelW - 30, titleY + 16);
+        pop();
+
+        // ─── Music row ───
+        let rowY1 = py + 70;
+        this._drawSoundRow(
+            px + 20, rowY1, panelW - 40,
+            "Music", soundManager._musicVolume,
+            this.soundIcon, this.crossIcon,
+            (v) => {
+                soundManager._musicVolume = v;
+                if (soundManager.bgMusic) soundManager.bgMusic.setVolume(v);
+            }
+        );
+
+        // ─── SFX row ───
+        let rowY2 = py + 128;
+        this._drawSoundRow(
+            px + 20, rowY2, panelW - 40,
+            "SFX", soundManager._sfxVolume,
+            this.soundIcon, this.crossIcon,
+            (v) => { soundManager._sfxVolume = v; }
+        );
+    }
+
+    // ─── Ligne son : icone + label + slider ───
+    _drawSoundRow(x, y, rowW, label, currentVol, soundIcon, crossIcon, onChange) {
+        let iconSize  = 28;
+        let sliderX   = x + iconSize + 8;
+        let sliderW   = rowW - iconSize - 8;
+        let sliderH   = 10;
+        let sliderY   = y + iconSize / 2 - sliderH / 2;
+
+        // Icône son
+        if (soundIcon) {
+            push();
+            imageMode(CORNER);
+            image(soundIcon, x, y, iconSize, iconSize);
+            pop();
+        }
+
+        // Icône croix si volume à 0
+        if (crossIcon && currentVol <= 0) {
+            push();
+            imageMode(CORNER);
+            tint(255, 60, 60, 200);
+            image(crossIcon, x, y, iconSize, iconSize);
+            noTint();
+            pop();
+        }
+
+        // Label
+        if (this.font) textFont(this.font);
+        push();
+        fill(40, 20, 5); noStroke();
+        textSize(16); textAlign(LEFT, CENTER);
+        text(label, sliderX + 2, y + iconSize / 2 + 1);
+        fill(200, 150, 60);
+        text(label, sliderX, y + iconSize / 2);
+        pop();
+
+        // Slider fond
+        let labelW    = 50;
+        let trackX    = sliderX + labelW;
+        let trackW    = sliderW - labelW;
+        let fillRatio = currentVol;
+
+        push();
+        // Track fond bois sombre
+        fill(30, 18, 8); noStroke();
+        rect(trackX, sliderY, trackW, sliderH, 5);
+        // Fill doré selon volume
+        fill(200, 140, 30);
+        rect(trackX, sliderY, trackW * fillRatio, sliderH, 5);
+        // Contour
+        noFill(); stroke(100, 65, 20, 150); strokeWeight(1);
+        rect(trackX, sliderY, trackW, sliderH, 5);
+        // Poignée
+        let knobX = trackX + trackW * fillRatio;
+        fill(240, 190, 60); noStroke();
+        circle(knobX, sliderY + sliderH / 2, 18);
+        stroke(160, 110, 20); strokeWeight(1.5); noFill();
+        circle(knobX, sliderY + sliderH / 2, 18);
+        pop();
+
+        // Interaction souris sur le slider
+        let knobY   = sliderY + sliderH / 2;
+        let hitY    = knobY;
+        if (mouseIsPressed &&
+            mouseX > trackX - 10 && mouseX < trackX + trackW + 10 &&
+            mouseY > hitY - 14  && mouseY < hitY + 14) {
+            let newVol = constrain((mouseX - trackX) / trackW, 0, 1);
+            onChange(newVol);
+        }
     }
 
     // =============================================

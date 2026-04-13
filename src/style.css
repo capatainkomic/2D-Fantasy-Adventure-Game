@@ -96,3 +96,16 @@ html, body {
     opacity: 0;
     pointer-events: none;
 }
+
+/* =============================================
+   DEBUG PANELS — positionnés sur les côtés du canvas
+   Même logique de positionnement que les nuages
+   ============================================= */
+
+/* Les panels sont rendus via DebugPanel.js — ces règles
+   assurent qu'ils ne débordent pas sur le canvas */
+#debug-panel-left,
+#debug-panel-right {
+    /* Les panels ne doivent pas dépasser la hauteur du canvas */
+    max-height: var(--canvas-h);
+}

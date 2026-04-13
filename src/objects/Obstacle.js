@@ -1,13 +1,7 @@
-// =============================================
-// Obstacle — rocher doré animé
-// N'étend PAS Vehicle — ne se déplace pas
-// Possède pos et r pour être compatible avec avoid() de Vehicle.js
-// Spritesheet : 768x128, 8 frames, animé en boucle
-// =============================================
 class Obstacle {
 
     static img        = null;
-    static frameW     = 128
+    static frameW     = 128;
     static frameH     = 128;
     static frameCount = 6;
 
@@ -16,12 +10,10 @@ class Obstacle {
     }
 
     constructor(x, y, displaySize = 128) {
-        // pos et r — les deux seules propriétés requises par avoid() dans Vehicle.js
         this.pos         = createVector(x, y);
         this.displaySize = displaySize;
-        this.r           = displaySize * 0.4; // rayon de collision proportionnel
+        this.r           = displaySize * 0.4;
 
-        // Animation en boucle
         this.animFrame = 0;
         this.animTimer = 0;
         this.animDelay = 3;
@@ -38,7 +30,7 @@ class Obstacle {
     show() {
         if (!Obstacle.img) return;
 
-        let sx = this.animFrame * Obstacle.frameW;
+        const sx = this.animFrame * Obstacle.frameW;
 
         push();
         imageMode(CENTER);
@@ -51,9 +43,10 @@ class Obstacle {
         );
         pop();
 
-        if (typeof Vehicle !== 'undefined' && Vehicle.debug || true) {
+        // Rayon de collision — affiché uniquement en mode debug
+        if (Vehicle.debug) {
             push();
-            fill(255, 50, 0, 150);
+            noFill();
             stroke(255, 50, 0, 150);
             strokeWeight(1);
             circle(this.pos.x, this.pos.y, this.r * 2);
