@@ -7,7 +7,7 @@
 
 
 
-## 🌟 Introduction
+## <img src="./assets/images/boy_chibi.png" width="50"> Introduction
 
 Avec l’essor récent de l’intelligence artificielle, notamment des modèles génératifs, son utilisation s’est largement répandue dans le quotidien des développeurs et plus globalement dans le domaine de l’informatique. Aujourd’hui, des outils comme ChatGPT ou GitHub Copilot permettent d’accélérer le développement, d’améliorer la qualité du code et de gagner en productivité. Par exemple, certaines études montrent que ces outils peuvent augmenter la vitesse de développement de 30 à 50 %. Cette évolution met en évidence l’importance de savoir utiliser efficacement ces technologies. 
 
@@ -19,7 +19,7 @@ Ce projet s’inscrit dans cette double perspective : d’une part, implémenter
 
 <br>
 
-## 🛠️ Environnement de Développement
+## <img src="./assets/images/boy_chibi.png" width="50">  Environnement de Développement
 * **IDE** : `VS Code` 
 * **Modèles IA utilisés** : `Claude 3.5 Sonnet` & `Claude 3 Haiku`
 * **Librairie Graphique** : `p5.js`
@@ -27,7 +27,7 @@ Ce projet s’inscrit dans cette double perspective : d’une part, implémenter
 <br>
 
 
-## 🎮 Description du jeu 
+## <img src="./assets/images/boy_chibi.png" width="50"> Description du jeu 
 **The Adventure of The Sword Hero** est un jeu d'aventure et d'action 2D où vous incarnez un héros solitaire. Votre mission est simple mais périlleuse : explorer la carte et éliminer tous les ennemis pour triompher.
 
 ### Contrôles 
@@ -84,12 +84,14 @@ Pour les besoins du cours, un système de debug complet a été intégré. Il pe
 <br>
 
 
----
+<div align="center" >
+  <img src="./assets/images/sea_divider.gif" width="100%" heigh="150">
+</div>
 
 
 <br>
 
-## 🧠 Le Laboratoire des Steering Behaviors
+## <img src="./assets/images/boy_chibi.png" width="50">  Le Laboratoire des Steering Behaviors
 
 Le cœur du projet repose sur l'implémentation des algorithmes de **Craig Reynolds**. Chaque entité possède un "cerveau" composé de plusieurs forces cumulées qui dictent son comportement de manière organique.
 
@@ -150,11 +152,14 @@ Le cœur du projet repose sur l'implémentation des algorithmes de **Craig Reyno
 
 <br>
 
----
+<div align="center" height="75" >
+  <img src="./assets/images/sea_divider.gif" width="100%" >
+</div>
+
 
 <br>
 
-## 🤖 Utilisation de l'assistant IA : processus et retour d'expérience
+## <img src="./assets/images/boy_chibi.png" width="50">  Utilisation de l'assistant IA : processus et retour d'expérience
 
 ### L’approche : hybride et itérative
 
@@ -269,12 +274,15 @@ Le processus suit un cycle itératif :
 
 <br>
 
----
+<div align="center" height="75" >
+  <img src="./assets/images/frog_divider.jpg" width="100%" >
+</div>
+
 
 <br>
 
 
-## CREDITS
+##  <img src="./assets/images/boy_chibi.png" width="50">  CREDITS
 #### AUDIO
 *Sound effects provided by Pixabay and independent artists*
 
