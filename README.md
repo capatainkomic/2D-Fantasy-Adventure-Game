@@ -162,7 +162,7 @@ Le cœur du projet repose sur l'implémentation des algorithmes de **Craig Reyno
 <br>
 <br>
 
-## <img src="./assets/images/boy_chibi.png" width="50">  Utilisation de l'assistant IA : processus et retour d'expérience
+## <img src="./assets/images/boy_chibi.png" width="50">  Utilisation de l'assistant IA 
 
 ### L’approche : hybride et itérative
 
@@ -261,24 +261,33 @@ Le processus suit un cycle itératif :
 | Documentation non encadré et irrégulière	|  Documentation complète et cohérente |
 | Refactorisation longue et manuelle	| Refactorisation guidée et cohérente |
 
+
+<br>
 <br>
 
-### Mon Expérience
+<div align="center" height="75" >
+  <img src="./assets/images/sea_divider.gif" width="100%" >
+</div>
 
-#### Ce que j'ai aimé
+
+<br>
+
+## <img src="./assets/images/boy_chibi.png" width="50">  Retour d'expérience
+
+### Ce que j'ai aimé
 - Le rendu visuel et la progression du projet : voir les assets, la map et les animations s’intégrer progressivement a rendu le projet concret et motivant.
 - La puissance des comportements : observer, par exemple, les moutons se regrouper (Herd) et réagir de façon fluide et naturelle à mes actions a été particulièrement satisfaisant.
 - Découvrir des nouvelles techniques de théorie de jeu vidéo comme par exemple le tri-y.
 
-#### Ce que j'ai moins aimé
+### Ce que j'ai moins aimé
 - Les longues phases de refactorisation, souvent causées par des prompts imprécis au départ, ce qui m’a fait comprendre l’importance de la clarté dans la communication avec une IA.
 - Les répétitions dans certaines tâches. 
 - Le débogage, parfois long qui demandaient davantage de rigueur et d’attention que prévu.
 
 <br>
 
-<div align="center" height="75" >
-  <img src="./assets/images/frog_divider.jpg" width="100%" >
+<div align="center">
+  <img src="./assets/images/frog_divider.jpg" width="100%">
 </div>
 
 
