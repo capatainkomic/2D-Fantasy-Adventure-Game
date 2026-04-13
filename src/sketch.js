@@ -12,7 +12,7 @@ let popupManager = null;
 let infoPopup    = null;
 
 function preload() {
-    loadImage('../assets/ui/Loader/loading.gif');
+    loadImage('./assets/ui/Loader/loading.gif');
 
     gameMap = new GameMap();
     gameMap.preload();

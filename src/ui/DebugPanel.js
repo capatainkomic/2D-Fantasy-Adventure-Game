@@ -281,8 +281,8 @@ class DebugPanel {
         title.textContent = '⚙ ENTITIES';
         this._leftPanel.appendChild(title);
 
-        this._buildEntitySection(this._leftPanel, 'PLAYER', '../assets/ui/Human Avatars/Avatar_Sword_Hero.png', this.player);
-        this._buildEntitySection(this._leftPanel, 'ENEMY',  '../assets/ui/Human Avatars/Avatar_Enemy.png',      this.enemies[0]);
+        this._buildEntitySection(this._leftPanel, 'PLAYER', 'assets/ui/Human Avatars/Avatar_Sword_Hero.png', this.player);
+        this._buildEntitySection(this._leftPanel, 'ENEMY',  'assets/ui/Human Avatars/Avatar_Enemy.png',      this.enemies[0]);
         this._buildSheepSection(this._leftPanel);
     }
 
@@ -334,7 +334,7 @@ class DebugPanel {
 
         section.innerHTML = `
             <div class="debug-section-header">
-                <img src="../assets/ui/Human Avatars/Avatar_Sheep.png" alt="SHEEP"
+                <img src="assets/ui/Human Avatars/Avatar_Sheep.png" alt="SHEEP"
                      style="object-fit: contain; background: rgba(0,0,0,0.3);">
                 <span class="debug-section-title">SHEEP</span>
             </div>

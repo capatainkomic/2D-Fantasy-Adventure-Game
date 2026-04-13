@@ -10,7 +10,7 @@ class DustParticle {
     static img = null; // image partagée entre toutes les instances
 
     static preload() {
-        DustParticle.img = loadImage("../assets/particle FX/Dust_01.png");
+        DustParticle.img = loadImage("./assets/particle FX/Dust_01.png");
     }
 
     constructor(x, y, displaySize = 256) {

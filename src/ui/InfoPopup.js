@@ -22,19 +22,19 @@ class InfoPopup {
     };
 
     static preload() {
-        InfoPopup.imgs.woodBanner  = loadImage("../assets/ui/Banners/wood_banner.png");
-        InfoPopup.imgs.swordBlue   = loadImage("../assets/ui/Swords/sword_blue_left.png");
-        InfoPopup.imgs.swordRed    = loadImage("../assets/ui/Swords/sword_red_left.png");
-        InfoPopup.imgs.swordYellow = loadImage("../assets/ui/Swords/sword_yellow_left.png");
-        InfoPopup.imgs.swordPurple = loadImage("../assets/ui/Swords/sword_purple_left.png");
-        InfoPopup.imgs.btnRedReg   = loadImage("../assets/ui/Buttons/big_red_button_regular.png");
-        InfoPopup.imgs.gifMove     = loadImage("../assets/images/how_to_move.gif");
-        InfoPopup.imgs.gifShake    = loadImage("../assets/images/mouse_shake.gif");
-        InfoPopup.imgs.gifAttack   = loadImage("../assets/images/player_attack.gif");
-        InfoPopup.imgs.imgEnemyAvatar   = loadImage("../assets/ui/Human Avatars/Avatar_Enemy.png");
-        InfoPopup.imgs.obstacleFrame = loadImage("../assets/world/sprites/Gold Stones/Gold Stone 6_Highlight.png");
-        InfoPopup.imgs.sheepFrame    = loadImage("../assets/characters/Sheep/Sheep_Idle.png");
-        InfoPopup.imgs.font        = loadFont("../assets/fonts/JollyLodger-Regular.ttf");
+        InfoPopup.imgs.woodBanner  = loadImage("./assets/ui/Banners/wood_banner.png");
+        InfoPopup.imgs.swordBlue   = loadImage("./assets/ui/Swords/sword_blue_left.png");
+        InfoPopup.imgs.swordRed    = loadImage("./assets/ui/Swords/sword_red_left.png");
+        InfoPopup.imgs.swordYellow = loadImage("./assets/ui/Swords/sword_yellow_left.png");
+        InfoPopup.imgs.swordPurple = loadImage("./assets/ui/Swords/sword_purple_left.png");
+        InfoPopup.imgs.btnRedReg   = loadImage("./assets/ui/Buttons/big_red_button_regular.png");
+        InfoPopup.imgs.gifMove     = loadImage("./assets/images/how_to_move.gif");
+        InfoPopup.imgs.gifShake    = loadImage("./assets/images/mouse_shake.gif");
+        InfoPopup.imgs.gifAttack   = loadImage("./assets/images/player_attack.gif");
+        InfoPopup.imgs.imgEnemyAvatar   = loadImage("./assets/ui/Human Avatars/Avatar_Enemy.png");
+        InfoPopup.imgs.obstacleFrame = loadImage("./assets/world/sprites/Gold Stones/Gold Stone 6_Highlight.png");
+        InfoPopup.imgs.sheepFrame    = loadImage("./assets/characters/Sheep/Sheep_Idle.png");
+        InfoPopup.imgs.font        = loadFont("./assets/fonts/JollyLodger-Regular.ttf");
     }
 
     constructor() {

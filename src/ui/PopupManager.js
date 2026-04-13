@@ -19,17 +19,17 @@ class PopupManager {
     };
 
     static preload() {
-        PopupManager.imgs.banner       = loadImage("../assets/ui/Banners/pop_up_banner.png");
-        PopupManager.imgs.ribbonRed    = loadImage("../assets/ui/Ribbons/big_ribbon_red.png");
-        PopupManager.imgs.ribbonYellow = loadImage("../assets/ui/Ribbons/big_ribbon_yellow.png");
-        PopupManager.imgs.btnRedReg    = loadImage("../assets/ui/Buttons/big_red_button_regular.png");
-        PopupManager.imgs.btnRedPres   = loadImage("../assets/ui/Buttons/big_red_button_pressed.png");
-        PopupManager.imgs.btnBlueReg   = loadImage("../assets/ui/Buttons/big_blue_button_regular.png");
-        PopupManager.imgs.btnBluePres  = loadImage("../assets/ui/Buttons/big_blue_button_pressed.png");
-        PopupManager.imgs.sword        = loadImage("../assets/ui/Icons/sword.png");
-        PopupManager.imgs.coinIcon     = loadImage("../assets/ui/gold coin.png");
-        PopupManager.imgs.enemyAvatar  = loadImage("../assets/ui/Human Avatars/Avatar_Enemy.png");
-        PopupManager.imgs.font         = loadFont("../assets/fonts/JollyLodger-Regular.ttf");
+        PopupManager.imgs.banner       = loadImage("./assets/ui/Banners/pop_up_banner.png");
+        PopupManager.imgs.ribbonRed    = loadImage("./assets/ui/Ribbons/big_ribbon_red.png");
+        PopupManager.imgs.ribbonYellow = loadImage("./assets/ui/Ribbons/big_ribbon_yellow.png");
+        PopupManager.imgs.btnRedReg    = loadImage("./assets/ui/Buttons/big_red_button_regular.png");
+        PopupManager.imgs.btnRedPres   = loadImage("./assets/ui/Buttons/big_red_button_pressed.png");
+        PopupManager.imgs.btnBlueReg   = loadImage("./assets/ui/Buttons/big_blue_button_regular.png");
+        PopupManager.imgs.btnBluePres  = loadImage("./assets/ui/Buttons/big_blue_button_pressed.png");
+        PopupManager.imgs.sword        = loadImage("./assets/ui/Icons/sword.png");
+        PopupManager.imgs.coinIcon     = loadImage("./assets/ui/gold coin.png");
+        PopupManager.imgs.enemyAvatar  = loadImage("./assets/ui/Human Avatars/Avatar_Enemy.png");
+        PopupManager.imgs.font         = loadFont("./assets/fonts/JollyLodger-Regular.ttf");
     }
 
     constructor() {

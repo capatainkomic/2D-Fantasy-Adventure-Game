@@ -11,7 +11,7 @@ class Enemy extends Vehicle {
     };
 
     static preload() {
-        const dir = "../assets/characters/Lancer";
+        const dir = "./assets/characters/Lancer";
         Enemy.imgs.idle              = loadImage(`${dir}/Lancer_Idle.png`);
         Enemy.imgs.run               = loadImage(`${dir}/Lancer_Run.png`);
         Enemy.imgs.attack_right      = loadImage(`${dir}/Lancer_Right_Attack.png`);

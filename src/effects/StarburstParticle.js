@@ -12,7 +12,7 @@ class StarBurstParticle {
     static rowCount   = 8;         // lignes totales
 
     static preload() {
-        StarBurstParticle.img = loadImage("../assets/particle FX/Star_Burst_spritesheet.png");
+        StarBurstParticle.img = loadImage("./assets/particle FX/Star_Burst_spritesheet.png");
     }
 
     constructor(x, y, displaySize = 256) {

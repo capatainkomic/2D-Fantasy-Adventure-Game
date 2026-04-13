@@ -6,8 +6,8 @@ class Sheep extends NPC {
     };
 
     static preload() {
-        Sheep.imgs.grass = loadImage("../assets/characters/Sheep/Sheep_Grass.png");
-        Sheep.imgs.move  = loadImage("../assets/characters/Sheep/Sheep_Move.png");
+        Sheep.imgs.grass = loadImage("./assets/characters/Sheep/Sheep_Grass.png");
+        Sheep.imgs.move  = loadImage("./assets/characters/Sheep/Sheep_Move.png");
     }
 
     constructor(x, y) {

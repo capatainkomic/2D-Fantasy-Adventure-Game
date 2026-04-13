@@ -40,7 +40,7 @@ class Player extends Vehicle {
     }
 
     preload() {
-        const basePath = "../assets/characters/Pirate";
+        const basePath = "./assets/characters/Pirate";
 
         for (const animKey in this.animations) {
             const anim = this.animations[animKey];

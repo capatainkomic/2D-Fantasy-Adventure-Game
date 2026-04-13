@@ -8,7 +8,7 @@ class Coin extends Collectible {
     static img = null;
 
     static preload() {
-        Coin.img = loadImage("../assets/ui/gold coin.png");
+        Coin.img = loadImage("./assets/ui/gold coin.png");
     }
 
     constructor(x, y) {

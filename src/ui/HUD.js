@@ -38,19 +38,19 @@ class HUD {
     }
 
     preload() {
-        this.playerAvatar = loadImage("../assets/ui/Human Avatars/Avatar_Sword_Hero.png");
-        this.enemyBanner  = loadImage("../assets/ui/Banners/enemy_banner.png");
-        this.goldBanner   = loadImage("../assets/ui/Banners/gold_coin_banner.png");
-        this.barBaseLeft  = loadImage("../assets/ui/Bars/BigBar_Base_Left.png");
-        this.barBaseMid   = loadImage("../assets/ui/Bars/BigBar_Base_Middle.png");
-        this.barBaseRight = loadImage("../assets/ui/Bars/BigBar_Base_Right.png");
-        this.barFill      = loadImage("../assets/ui/Bars/BigBar_Fill.png");
-        this.font         = loadFont("../assets/fonts/JollyLodger-Regular.ttf");
-        this.infoIcon     = loadImage("../assets/ui/Icons/info.png");
-        this.paramIcon    = loadImage("../assets/ui/Icons/parameter.png");
-        this.soundIcon    = loadImage("../assets/ui/Icons/sound.png");
-        this.crossIcon    = loadImage("../assets/ui/Icons/cross.png");
-        this.woodBanner   = loadImage("../assets/ui/Banners/wood_banner.png");
+        this.playerAvatar = loadImage("./assets/ui/Human Avatars/Avatar_Sword_Hero.png");
+        this.enemyBanner  = loadImage("./assets/ui/Banners/enemy_banner.png");
+        this.goldBanner   = loadImage("./assets/ui/Banners/gold_coin_banner.png");
+        this.barBaseLeft  = loadImage("./assets/ui/Bars/BigBar_Base_Left.png");
+        this.barBaseMid   = loadImage("./assets/ui/Bars/BigBar_Base_Middle.png");
+        this.barBaseRight = loadImage("./assets/ui/Bars/BigBar_Base_Right.png");
+        this.barFill      = loadImage("./assets/ui/Bars/BigBar_Fill.png");
+        this.font         = loadFont("./assets/fonts/JollyLodger-Regular.ttf");
+        this.infoIcon     = loadImage("./assets/ui/Icons/info.png");
+        this.paramIcon    = loadImage("./assets/ui/Icons/parameter.png");
+        this.soundIcon    = loadImage("./assets/ui/Icons/sound.png");
+        this.crossIcon    = loadImage("./assets/ui/Icons/cross.png");
+        this.woodBanner   = loadImage("./assets/ui/Banners/wood_banner.png");
     }
 
     update() {

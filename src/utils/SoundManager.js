@@ -31,17 +31,17 @@ class SoundManager {
     }
 
     preload() {
-        this.swordSlash  = loadSound("../assets/sounds/SFX/sword_slash.mp3");
-        this.hit         = loadSound("../assets/sounds/SFX/hit.mp3");
-        this.sparkle      = loadSound("../assets/sounds/SFX/magic_sparkle.mp3");
-        this.coinCollect = loadSound("../assets/sounds/SFX/coin_collect.mp3");
-        this.heal        = loadSound("../assets/sounds/SFX/heal.wav");
-        this.enemyDeath  = loadSound("../assets/sounds/SFX/enemy_death.mp3");
-        this.selected    = loadSound("../assets/sounds/SFX/selected.wav");
-        this.hover       = loadSound("../assets/sounds/SFX/hover.mp3");
-        this.gameWinner  = loadSound("../assets/sounds/SFX/game_winner.mp3");
-        this.gameOver    = loadSound("../assets/sounds/SFX/game_over.mp3");
-        this.bgMusic     = loadSound("../assets/sounds/Music/05 - Battle 1.wav");
+        this.swordSlash  = loadSound("./assets/sounds/SFX/sword_slash.mp3");
+        this.hit         = loadSound("./assets/sounds/SFX/hit.mp3");
+        this.sparkle      = loadSound("./assets/sounds/SFX/magic_sparkle.mp3");
+        this.coinCollect = loadSound("./assets/sounds/SFX/coin_collect.mp3");
+        this.heal        = loadSound("./assets/sounds/SFX/heal.wav");
+        this.enemyDeath  = loadSound("./assets/sounds/SFX/enemy_death.mp3");
+        this.selected    = loadSound("./assets/sounds/SFX/selected.wav");
+        this.hover       = loadSound("./assets/sounds/SFX/hover.mp3");
+        this.gameWinner  = loadSound("./assets/sounds/SFX/game_winner.mp3");
+        this.gameOver    = loadSound("./assets/sounds/SFX/game_over.mp3");
+        this.bgMusic     = loadSound("./assets/sounds/Music/05 - Battle 1.wav");
     }
 
     // ─── Démarrer la musique de fond ───

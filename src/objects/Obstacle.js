@@ -6,7 +6,7 @@ class Obstacle {
     static frameCount = 6;
 
     static preload() {
-        Obstacle.img = loadImage("../assets/world/sprites/Gold Stones/Gold Stone 6_Highlight.png");
+        Obstacle.img = loadImage("./assets/world/sprites/Gold Stones/Gold Stone 6_Highlight.png");
     }
 
     constructor(x, y, displaySize = 128) {

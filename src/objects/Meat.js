@@ -9,7 +9,7 @@ class Meat extends Collectible {
     static img = null;
 
     static preload() {
-        Meat.img = loadImage("../assets/world/objects/Meat Resource.png");
+        Meat.img = loadImage("./assets/world/objects/Meat Resource.png");
     }
 
     constructor(x, y) {
