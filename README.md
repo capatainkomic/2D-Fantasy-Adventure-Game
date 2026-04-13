@@ -80,7 +80,7 @@ Pour les besoins du cours, un système de debug complet a été intégré. Il pe
 
 <p align="center">
   <img src="./assets/images/debug_panel_view_1.png" width="190">
-  <img src="./assets/images/debug_panel.gif" width="550" alt="Debug Transition">
+  <img src="./assets/images/debug_panel.gif" width="400" alt="Debug Transition">
   <img src="./assets/images/debug_panel_view_2.png" width="190">
 </p>
 
