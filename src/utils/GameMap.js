@@ -22,17 +22,17 @@ class GameMap {
     }
 
     preload() {
-        this.mapData = loadJSON("../assets/world/map.json");
+        this.mapData = loadJSON("./assets/world/map.json");
 
-        this.waterImage = loadImage("../assets/world/water layer.png");
-        this.waterFoamImage = loadImage("../assets/world/sprites/Water Foam.png");
-        this.baseLandImage = loadImage("../assets/world/base land layer.png");
-        this.plateau_layer1_image = loadImage("../assets/world/plateau layer 1.png");
-        this.plateau_layer2_image = loadImage("../assets/world/plateau layer 2.png");
-        this.building_layer1_image = loadImage("../assets/world/buildings layer 1.png");
-        this.building_layer2_image = loadImage("../assets/world/buildings layer 2.png");
-        this.building_layer3_image = loadImage("../assets/world/buildings layer 3.png");
-        //this.foreground = loadImage("../assets/world/foreground.png");
+        this.waterImage = loadImage("./assets/world/water layer.png");
+        this.waterFoamImage = loadImage("./assets/world/sprites/Water Foam.png");
+        this.baseLandImage = loadImage("./assets/world/base land layer.png");
+        this.plateau_layer1_image = loadImage("./assets/world/plateau layer 1.png");
+        this.plateau_layer2_image = loadImage("./assets/world/plateau layer 2.png");
+        this.building_layer1_image = loadImage("./assets/world/buildings layer 1.png");
+        this.building_layer2_image = loadImage("./assets/world/buildings layer 2.png");
+        this.building_layer3_image = loadImage("./assets/world/buildings layer 3.png");
+        //this.foreground = loadImage("./assets/world/foreground.png");
         
     }
 
