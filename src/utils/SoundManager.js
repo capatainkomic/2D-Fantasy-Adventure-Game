@@ -65,7 +65,7 @@ class SoundManager {
     }
 
     playCoinCollect() {
-        this._play(this.coinCollect, 0.5); // volume réduit — peut jouer souvent
+        this._play(this.coinCollect, min(this._sfxVolume, 0.5)); // volume réduit — peut jouer souvent
     }
 
     playHeal() {
@@ -86,7 +86,7 @@ class SoundManager {
         // Anti-spam — joue seulement si on change de bouton
         if (btnId === this._lastHoveredBtn) return;
         this._lastHoveredBtn = btnId;
-        this._play(this.hover, 0.4);
+        this._play(this.hover, min(this._sfxVolume, 0.4));
     }
 
     clearHover() {
@@ -104,7 +104,7 @@ class SoundManager {
     }
 
     playSparkle() {
-        this._play(this.sparkle, 0.5);
+        this._play(this.sparkle, min(this._sfxVolume, 0.5));
     }
 
     // ─── Utilitaire interne ───
