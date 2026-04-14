@@ -7,7 +7,7 @@
   </a>
 </p>
 
-<a href="https://youtu.be/tceqGfH8194"><i>Lien vers la vidéo youtube du Gameplay</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <a href=""><i>Lien vers le jeu deployé en ligne</i></a>  
+<a href="https://youtu.be/tceqGfH8194"><i>Lien vers la vidéo youtube du Gameplay</i></a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <a href="https://capatainkomic.github.io/2D-Fantasy-Adventure-Game/"><i>Lien vers le jeu deployé en ligne</i></a>  
 
 
 
